@@ -17,7 +17,7 @@ AS $$
 DECLARE
     new_id BIGINT;
 BEGIN
-    INSERT INTO auth.users (
+    INSERT INTO school.truong (
         ten,
         dia_chi,
         hinh_anh,

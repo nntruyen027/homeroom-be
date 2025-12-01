@@ -1,6 +1,8 @@
 package com.vinhthanh2.lophocdientu.controller.admin;
 
 import com.vinhthanh2.lophocdientu.dto.req.TruongReq;
+import com.vinhthanh2.lophocdientu.service.GiaoVienService;
+import com.vinhthanh2.lophocdientu.service.LopService;
 import com.vinhthanh2.lophocdientu.service.TruongService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,19 +20,39 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 @RestController
-@RequestMapping("/quantri/truong")
+@RequestMapping("/quan-tri/truong")
 @Getter
 @Setter
 @AllArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminTruongController {
     final private TruongService truongService;
+    final private LopService lopService;
+    final private GiaoVienService giaoVienService;
 
     @GetMapping
     public ResponseEntity<?> layDsTruong(@RequestParam(required = false, defaultValue = "") String search,
                                          @RequestParam(defaultValue = "1") int page,
                                          @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(truongService.layDsTruong(search, page, size));
+    }
+
+    @GetMapping("{id}/lop")
+    public ResponseEntity<?> layDsLopCuaTruong(
+            @PathVariable Long id,
+            @RequestParam(required = false, defaultValue = "") String search,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(lopService.layDsLopTheoTruong(id, search, page, size));
+    }
+
+    @GetMapping("{id}/giao-vien")
+    public ResponseEntity<?> layDsGiaoVienThuocTruong(
+            @PathVariable Long id,
+            @RequestParam(required = false, defaultValue = "") String search,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(giaoVienService.layGiaoVienTheoTruong(id, search, page, size));
     }
 
     @PostMapping

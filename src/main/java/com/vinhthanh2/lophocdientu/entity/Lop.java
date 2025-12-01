@@ -24,4 +24,9 @@ public class Lop {
     @Column
     private String hinhAnh;
 
+    @Transient
+    private Truong truong;
+
+    @Transient
+    private User giaoVien;
 }

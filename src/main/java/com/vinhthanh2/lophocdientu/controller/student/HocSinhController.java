@@ -1,4 +1,4 @@
-package com.vinhthanh2.lophocdientu.controller.teacher;
+package com.vinhthanh2.lophocdientu.controller.student;
 
 import com.vinhthanh2.lophocdientu.dto.req.UpdateStudentReq;
 import com.vinhthanh2.lophocdientu.service.AuthService;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/hoc-sinh")
+@RequestMapping("hoc-sinh")
 @Getter
 @Setter
 @AllArgsConstructor

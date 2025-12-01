@@ -4,6 +4,7 @@ import com.vinhthanh2.lophocdientu.dto.req.UpdatePassReq;
 import com.vinhthanh2.lophocdientu.dto.req.UpdateTeacherReq;
 import com.vinhthanh2.lophocdientu.service.AuthService;
 import com.vinhthanh2.lophocdientu.service.GiaoVienService;
+import com.vinhthanh2.lophocdientu.service.LopService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/quantri/giaovien")
+@RequestMapping("/quan-tri/giao-vien")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminGiaoVienController {
     private final GiaoVienService giaoVienService;
     private final AuthService authService;
+    private final LopService lopService;
 
     @GetMapping()
     public ResponseEntity<?> layDsGiaoVien(@RequestParam(required = false, defaultValue = "") String search,
@@ -28,13 +30,15 @@ public class AdminGiaoVienController {
         return ResponseEntity.ok(giaoVienService.layDsGiaoVien(search, page, size));
     }
 
-    @GetMapping("/truong/{lopId}")
-    public ResponseEntity<?> layDsGiaoVienTheoTruong(@PathVariable Long truong,
-                                                     @RequestParam(required = false, defaultValue = "") String search,
-                                                     @RequestParam(defaultValue = "1") int page,
-                                                     @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(giaoVienService.layGiaoVienTheoTruong(truong, search, page, size));
+    @GetMapping("/{id}/lop")
+    public ResponseEntity<?> layDsLopThuocGiaoVien(
+            @PathVariable Long id,
+            @RequestParam(required = false, defaultValue = "") String search,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(lopService.layDsLopTheoGv(id, search, page, size));
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> layGiaoVienTheoId(@PathVariable Long id) {

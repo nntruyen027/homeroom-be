@@ -1,20 +1,14 @@
 package com.vinhthanh2.lophocdientu.dto.req;
 
-import com.vinhthanh2.lophocdientu.entity.Truong;
-import com.vinhthanh2.lophocdientu.entity.User;
+import lombok.Data;
 
-import java.util.List;
-
+@Data
 public class LopReq {
-    private Long id;
-
     private String ten;
 
     private String hinhAnh;
 
-    private Truong truong;
+    private Long truongId;
 
-    private User giaoVien;
-
-    private List<User> dsHocSinh;
+    private Long giaoVienId;
 }
