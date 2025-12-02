@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Getter
 @Setter
 @AllArgsConstructor
-@PreAuthorize("hasRole('HOC_SINH')")
+@PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
 public class HocSinhController {
     private final HocSinhService hocSinhService;
     private final AuthService authService;

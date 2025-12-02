@@ -1,5 +1,7 @@
 package com.vinhthanh2.lophocdientu.repository;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinhthanh2.lophocdientu.dto.req.LopReq;
 import com.vinhthanh2.lophocdientu.dto.sql.LopPro;
 import com.vinhthanh2.lophocdientu.entity.Lop;
@@ -18,6 +20,7 @@ public class LopRepo {
     @PersistenceContext
     private EntityManager entityManager;
     final private LopMapper lopMapper;
+    final private ObjectMapper objectMapper;
 
     @SuppressWarnings("unchecked")
     public List<Lop> layLopTheoTruong(Long schoolId, String search, int page, int size) {
@@ -71,7 +74,7 @@ public class LopRepo {
                         :p_size
                     )
                 """;
-        List<LopPro> lopPros = entityManager.createNativeQuery(sql, Lop.class)
+        List<LopPro> lopPros = entityManager.createNativeQuery(sql, LopPro.class)
                 .setParameter("p_giao_vien_id", giaoVienId)
                 .setParameter("p_search", search)
                 .setParameter("p_offset", offset)
@@ -105,46 +108,59 @@ public class LopRepo {
     public Lop taoLop(LopReq lopReq) {
         String sql = """
                     select school.fn_tao_lop(
-                        p_ten,
-                        p_hinh_anh,
-                        p_truong_id,
-                        p_giao_vien_id
+                        :p_ten,
+                        :p_hinh_anh,
+                        :p_truong_id,
+                        :p_giao_vien_id
                     )
                 """;
 
-        LopPro lopPro = (LopPro) entityManager.createNativeQuery(sql, LopPro.class)
+        String json = (String) entityManager.createNativeQuery(sql)
                 .setParameter("p_ten", lopReq.getTen())
                 .setParameter("p_hinh_anh", lopReq.getHinhAnh())
                 .setParameter("p_truong_id", lopReq.getTruongId())
                 .setParameter("p_giao_vien_id", lopReq.getGiaoVienId())
                 .getSingleResult();
 
-        return lopMapper.fromPro(lopPro);
+        try {
+
+            LopPro lopPro = objectMapper.readValue(json, LopPro.class);
+
+
+            return lopMapper.fromPro(lopPro);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Lỗi parse JSON", e);
+        }
     }
 
     @Transactional
     public Lop suaLop(Long id, LopReq lopReq, Long nguoiSuaId) {
         String sql = """
                     select school.fn_sua_lop(
-                        p_id,
-                        p_ten,
-                        p_hinh_anh,
-                        p_truong_id,
-                        p_giao_vien_id,
-                        p_nguoi_sua_id
+                        :p_id,
+                        :p_ten,
+                        :p_hinh_anh,
+                        :p_truong_id,
+                        :p_nguoi_sua_id
                     )
                 """;
 
-        LopPro lopPro = (LopPro) entityManager.createNativeQuery(sql, LopPro.class)
+        String json = (String) entityManager.createNativeQuery(sql)
                 .setParameter("p_id", id)
                 .setParameter("p_ten", lopReq.getTen())
                 .setParameter("p_hinh_anh", lopReq.getHinhAnh())
                 .setParameter("p_truong_id", lopReq.getTruongId())
-                .setParameter("p_giao_vien_id", lopReq.getGiaoVienId())
                 .setParameter("p_nguoi_sua_id", nguoiSuaId)
                 .getSingleResult();
 
-        return lopMapper.fromPro(lopPro);
+
+        try {
+            LopPro lopPro = objectMapper.readValue(json, LopPro.class);
+
+            return lopMapper.fromPro(lopPro);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Lỗi parse JSON", e);
+        }
     }
 
     @Transactional

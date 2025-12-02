@@ -13,7 +13,7 @@ RETURNS TABLE
     giao_vien_id BIGINT,
     ten_giao_vien TEXT,
     truong_id BIGINT,
-    ten_truong TEXT
+    ten_truong VARCHAR(120)
 )
 AS $$
 BEGIN
@@ -28,7 +28,7 @@ BEGIN
         l.ten,
         l.hinh_anh,
         l.giao_vien_id,
-        u.full_name AS ten_giao_vien,
+        u.ho_ten AS ten_giao_vien,
         l.truong_id,
         t.ten AS ten_truong
     FROM school.lop l
@@ -40,7 +40,11 @@ BEGIN
             OR unaccent(lower(l.ten)) LIKE '%' || unaccent(lower(p_search)) || '%'
           )
     ORDER BY l.id DESC
-    OFFSET (p_offset - 1) * p_limit
+    OFFSET p_offset * p_limit
     LIMIT p_limit;
 END;
 $$ LANGUAGE plpgsql;
+
+
+drop function school.fn_lay_tat_ca_lop_thuoc_giao_vien;
+select * from school.truong;

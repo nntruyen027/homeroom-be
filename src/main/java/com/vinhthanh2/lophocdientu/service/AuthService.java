@@ -39,6 +39,18 @@ public class AuthService {
         return userMapper.toTeacherDto(user);
     }
 
+    public User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() ||
+                "anonymousUser".equals(auth.getPrincipal())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
+        }
+
+        return userRepo.findByUsername(auth.getName())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    }
+
 
     public void doiMatKhau(UpdatePassReq updatePassReq) {
         String username = SecurityUtils.getCurrentUsername();

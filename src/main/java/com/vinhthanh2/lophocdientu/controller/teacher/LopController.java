@@ -2,7 +2,6 @@ package com.vinhthanh2.lophocdientu.controller.teacher;
 
 import com.vinhthanh2.lophocdientu.dto.req.LopReq;
 import com.vinhthanh2.lophocdientu.dto.res.LopRes;
-import com.vinhthanh2.lophocdientu.dto.res.TeacherRes;
 import com.vinhthanh2.lophocdientu.service.AuthService;
 import com.vinhthanh2.lophocdientu.service.LopService;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/giao-vien/lop")
-@PreAuthorize("hasRole('TEACHER')")
+@PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
 @AllArgsConstructor
 public class LopController {
     final private LopService lopService;
@@ -25,7 +24,7 @@ public class LopController {
             @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(lopService.layDsLopTheoGv(
-                ((TeacherRes) authService.getCurrentUserDto()).getId(),
+                authService.getCurrentUser().getId(),
                 search,
                 page,
                 size
@@ -34,13 +33,13 @@ public class LopController {
 
     @PostMapping
     public LopRes taoLop(@RequestBody LopReq lopReq) {
-        lopReq.setGiaoVienId(((TeacherRes) authService.getCurrentUserDto()).getId());
+        lopReq.setGiaoVienId(authService.getCurrentUser().getId());
         return lopService.taoLop(lopReq);
     }
 
     @PutMapping("/{id}")
     public LopRes suaLop(@PathVariable Long id, @RequestBody LopReq lopReq) {
-        lopReq.setGiaoVienId(((TeacherRes) authService.getCurrentUserDto()).getId());
+        lopReq.setGiaoVienId(authService.getCurrentUser().getId());
         return lopService.suaLop(id, lopReq);
     }
 

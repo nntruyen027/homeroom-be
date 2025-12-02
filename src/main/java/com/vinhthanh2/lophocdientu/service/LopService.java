@@ -63,12 +63,12 @@ public class LopService {
     }
 
     public LopRes suaLop(Long id, LopReq lopReq) {
-        User user = (User) authService.getCurrentUserDto();
+        User user = authService.getCurrentUser();
         return lopMapper.toDto(lopRepo.suaLop(id, lopReq, user.getId()));
     }
 
     public void xoaLop(Long id) {
-        User user = (User) authService.getCurrentUserDto();
+        User user = authService.getCurrentUser();
         lopRepo.xoaLop(id, user.getId());
     }
 }

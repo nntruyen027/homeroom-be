@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@PreAuthorize("hasRole('TEACHER')")
+@PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
 public class GiaoVienController {
     private final GiaoVienService giaoVienService;
     private final AuthService authService;
