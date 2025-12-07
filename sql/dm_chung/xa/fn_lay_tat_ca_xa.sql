@@ -31,7 +31,7 @@ BEGIN
          OR unaccent(lower(x.ten)) LIKE '%' || unaccent(lower(p_search)) || '%')
         AND
         (p_tinh_id IS NULL OR x.tinh_id = p_tinh_id)
-    ORDER BY x.ten
+    ORDER BY t.ten, x.ten
     OFFSET p_offset * p_limit
     LIMIT p_limit;
 END;
