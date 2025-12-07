@@ -8,7 +8,7 @@ public class TruongReq {
 
     private String diaChiChiTiet;
 
-    private String xaId;
+    private Long xaId;
 
     private String hinhAnh;
 
