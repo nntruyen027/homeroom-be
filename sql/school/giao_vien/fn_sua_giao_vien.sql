@@ -22,22 +22,27 @@ RETURNS TABLE
     la_nam BOOLEAN,
     bo_mon TEXT,
     chuc_vu TEXT,
-	dia_chi_chi_tiet VARCHAR(500),
-	xa_id BIGINT,
-	ten_xa VARCHAR(120),
-	tinh_id BIGINT,
-	ten_tinh VARCHAR(120),
-	role VARCHAR(30)
+    dia_chi_chi_tiet VARCHAR(500),
+    xa_id BIGINT,
+    ten_xa VARCHAR(120),
+    tinh_id BIGINT,
+    ten_tinh VARCHAR(120),
+    role VARCHAR(30)
 )
 AS $$
 BEGIN
-	IF NOT EXISTS (select 1 from auth.users u where u.id = p_id and u.role = 'TEACHER') THEN
-		raise exception 'Giáo viên với id % không tồn tại', p_id;
-	END IF;
+    IF NOT EXISTS (
+        SELECT 1
+        FROM auth.users u
+        WHERE u.id = p_id
+          AND u."role" = 'TEACHER'
+    ) THEN
+        RAISE EXCEPTION 'Giáo viên với id % không tồn tại', p_id;
+    END IF;
 
-	IF NOT EXISTS (select 1 from dm_chung.xa x where x.id = p_xa_id) THEN
-    		raise exception 'Xã với id % không tồn tại', p_xa_id;
-    	END IF;
+    IF NOT EXISTS (SELECT 1 FROM dm_chung.xa x WHERE x.id = p_xa_id) THEN
+        RAISE EXCEPTION 'Xã với id % không tồn tại', p_xa_id;
+    END IF;
 
     UPDATE auth.users
     SET
@@ -47,13 +52,13 @@ BEGIN
         la_nam = p_la_nam,
         bo_mon = p_bo_mon,
         chuc_vu = p_chuc_vu,
-		dia_chi_chi_tiet = p_dia_chi_chi_tiet,
-	   	xa_id = p_xa_id
+        dia_chi_chi_tiet = p_dia_chi_chi_tiet,
+        xa_id = p_xa_id
     WHERE id = p_id
-      AND role = 'TEACHER';
+      AND "role" = 'TEACHER';
 
     RETURN QUERY
-    SELECT u.id as out_id,
+    SELECT u.id AS out_id,
            u.username,
            u.ho_ten,
            u.avatar,
@@ -61,17 +66,17 @@ BEGIN
            u.la_nam,
            u.bo_mon,
            u.chuc_vu,
-		   u.dia_chi_chi_tiet,
-           x.id as xa_id,
-           x.ten as ten_xa,
-           t.id as tinh_id,
-           t.ten as ten_tinh,
-		   u.role
+           u.dia_chi_chi_tiet,
+           x.id AS xa_id,
+           x.ten AS ten_xa,
+           t.id AS tinh_id,
+           t.ten AS ten_tinh,
+           u."role"
     FROM auth.users u
-	LEFT JOIN dm_chung.xa x ON x.id = u.xa_id
-	LEFT JOIN dm_chung.tinh t ON t.id = x.tinh_id
+    LEFT JOIN dm_chung.xa x ON x.id = u.xa_id
+    LEFT JOIN dm_chung.tinh t ON t.id = x.tinh_id
     WHERE u.id = p_id
-      AND u.role = 'TEACHER'
+      AND u."role" = 'TEACHER'
     LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;

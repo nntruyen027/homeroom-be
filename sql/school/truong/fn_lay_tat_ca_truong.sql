@@ -37,7 +37,7 @@ BEGIN
         p_search IS NULL OR p_search = ''
         OR unaccent(lower(t.ten)) LIKE '%' || unaccent(lower(p_search)) || '%'
     ORDER BY t.ten
-    OFFSET p_offset * p_limit
+    OFFSET p_offset
     LIMIT p_limit;
 END;
 $$ LANGUAGE plpgsql;

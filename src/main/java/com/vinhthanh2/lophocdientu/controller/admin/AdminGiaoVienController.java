@@ -46,12 +46,12 @@ public class AdminGiaoVienController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> suaGiaoVien(Long id, UpdateTeacherReq updateTeacherReq) {
+    public ResponseEntity<?> suaGiaoVien(@PathVariable Long id, @RequestBody UpdateTeacherReq updateTeacherReq) {
         return ResponseEntity.ok(giaoVienService.suaGiaoVien(id, updateTeacherReq));
     }
 
     @PutMapping("/password/{id}")
-    public ResponseEntity<?> datLaiMatKhau(Long id, @RequestBody UpdatePassAdminReq body) {
+    public ResponseEntity<?> datLaiMatKhau(@PathVariable Long id, @RequestBody UpdatePassAdminReq body) {
         authService.datLaiMatKhauBoiAdmin(id, body.getNewPass());
         return ResponseEntity.ok().build();
     }

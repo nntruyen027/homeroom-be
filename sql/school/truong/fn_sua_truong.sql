@@ -23,14 +23,17 @@ RETURNS TABLE
 )
 AS $$
 BEGIN
-    IF NOT EXISTS (select 1 from school.truong where id = p_id) THEN
-		raise exception 'Trường với id % không tồn tại', p_id;
-	END IF;
+    -- Kiểm tra tồn tại trường
+    IF NOT EXISTS (SELECT 1 FROM school.truong WHERE id = p_id) THEN
+        RAISE EXCEPTION 'Trường với id % không tồn tại', p_id;
+    END IF;
 
-    	IF NOT EXISTS (select 1 from dm_chung.xa x where x.id = p_xa_id) THEN
-        		raise exception 'Xã với id % không tồn tại', p_xa_id;
-        	END IF;
+    -- Kiểm tra xã tồn tại
+    IF NOT EXISTS (SELECT 1 FROM dm_chung.xa WHERE id = p_xa_id) THEN
+        RAISE EXCEPTION 'Xã với id % không tồn tại', p_xa_id;
+    END IF;
 
+    -- Update
     UPDATE school.truong
     SET
         ten = p_ten,
@@ -40,6 +43,7 @@ BEGIN
 		xa_id = p_xa_id
     WHERE id = p_id;
 
+    -- Trả kết quả
     RETURN QUERY
         SELECT
            t.id AS out_id,
@@ -51,10 +55,10 @@ BEGIN
            t.dia_chi_chi_tiet,
            t.hinh_anh,
            t.logo
-    FROM school.truong t
-	LEFT JOIN dm_chung.xa x ON x.id = t.xa_id
-	LEFT JOIN dm_chung.tinh ti ON ti.id = x.tinh_id
-        WHERE t.id = new_id
-    LIMIT 1;
+        FROM school.truong t
+        LEFT JOIN dm_chung.xa x ON x.id = t.xa_id
+        LEFT JOIN dm_chung.tinh ti ON ti.id = x.tinh_id
+        WHERE t.id = p_id
+        LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
