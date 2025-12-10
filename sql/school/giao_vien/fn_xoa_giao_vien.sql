@@ -1,3 +1,5 @@
+DROP FUNCTION IF EXISTS school.fn_xoa_giao_vien;
+
 CREATE OR REPLACE FUNCTION school.fn_xoa_giao_vien(
     p_id BIGINT
 )
@@ -9,7 +11,7 @@ DECLARE
 BEGIN
     -- Kiểm tra xem giáo viên có tồn tại hay không
     SELECT EXISTS(
-        SELECT 1 FROM users
+        SELECT 1 FROM auth.users
         WHERE id = p_id AND role ILIKE '%TEACHER%'
     ) INTO v_exists;
 
@@ -18,7 +20,7 @@ BEGIN
     END IF;
 
     -- Xoá
-    DELETE FROM users WHERE id = p_id;
+    DELETE FROM auth.users WHERE id = p_id;
 
     RETURN TRUE;
 END;

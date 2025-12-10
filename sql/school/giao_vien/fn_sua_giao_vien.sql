@@ -27,10 +27,11 @@ RETURNS TABLE
     ten_xa VARCHAR(120),
     tinh_id BIGINT,
     ten_tinh VARCHAR(120),
-    role VARCHAR(30)
+    role_name VARCHAR(30)
 )
 AS $$
 BEGIN
+    -- kiểm tra giáo viên tồn tại (explicitly qualify role)
     IF NOT EXISTS (
         SELECT 1
         FROM auth.users u
@@ -40,10 +41,16 @@ BEGIN
         RAISE EXCEPTION 'Giáo viên với id % không tồn tại', p_id;
     END IF;
 
-    IF NOT EXISTS (SELECT 1 FROM dm_chung.xa x WHERE x.id = p_xa_id) THEN
+    -- kiểm tra xã tồn tại
+    IF NOT EXISTS (
+        SELECT 1
+        FROM dm_chung.xa x
+        WHERE x.id = p_xa_id
+    ) THEN
         RAISE EXCEPTION 'Xã với id % không tồn tại', p_xa_id;
     END IF;
 
+    -- cập nhật
     UPDATE auth.users
     SET
         avatar = p_avatar,
@@ -57,26 +64,28 @@ BEGIN
     WHERE id = p_id
       AND "role" = 'TEACHER';
 
+    -- trả về thông tin sau cập nhật, trả role cứng là 'TEACHER' dưới alias role_name
     RETURN QUERY
-    SELECT u.id AS out_id,
-           u.username,
-           u.ho_ten,
-           u.avatar,
-           u.ngay_sinh,
-           u.la_nam,
-           u.bo_mon,
-           u.chuc_vu,
-           u.dia_chi_chi_tiet,
-           x.id AS xa_id,
-           x.ten AS ten_xa,
-           t.id AS tinh_id,
-           t.ten AS ten_tinh,
-           u."role"
+    SELECT
+        u.id AS out_id,
+        u.username,
+        u.ho_ten,
+        u.avatar,
+        u.ngay_sinh,
+        u.la_nam,
+        u.bo_mon,
+        u.chuc_vu,
+        u.dia_chi_chi_tiet,
+        x.id AS xa_id,
+        x.ten AS ten_xa,
+        t.id AS tinh_id,
+        t.ten AS ten_tinh,
+        u.role AS role_name
     FROM auth.users u
     LEFT JOIN dm_chung.xa x ON x.id = u.xa_id
     LEFT JOIN dm_chung.tinh t ON t.id = x.tinh_id
     WHERE u.id = p_id
-      AND u."role" = 'TEACHER'
+      AND u.role = 'TEACHER'
     LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
