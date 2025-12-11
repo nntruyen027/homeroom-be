@@ -2,11 +2,6 @@ package com.vinhthanh2.lophocdientu.controller;
 
 import com.vinhthanh2.lophocdientu.dto.res.FileResponse;
 import com.vinhthanh2.lophocdientu.service.FileService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -30,86 +25,47 @@ public class FileController {
 
     private final FileService fileService;
 
-    // ---------------------------------------------
-    // UPLOAD FILE
-    // ---------------------------------------------
-    @Operation(
-            summary = "Upload file",
-            description = "API dùng để upload 1 file lên server."
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Upload thành công",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FileResponse.class))),
-            @ApiResponse(responseCode = "400", description = "File không hợp lệ", content = @Content)
-    })
+    // -------------------------------
+    // Upload file
+    // -------------------------------
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<FileResponse> uploadFile(
-            @org.springframework.web.bind.annotation.RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<FileResponse> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         return ResponseEntity.ok(fileService.upload(file));
     }
 
-    // ---------------------------------------------
-    // LẤY DS FILE
-    // ---------------------------------------------
-    @Operation(
-            summary = "Lấy danh sách toàn bộ file",
-            description = "Trả về danh sách file đã upload."
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FileResponse.class)))
-    })
+    // -------------------------------
+    // Lấy danh sách file phân trang
+    // -------------------------------
     @GetMapping
     public ResponseEntity<Page<FileResponse>> getAllFiles(@RequestParam(defaultValue = "1") int page,
                                                           @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(fileService.getAll(page - 1, size));
     }
 
-    // ---------------------------------------------
-    // DELETE FILE
-    // ---------------------------------------------
-    @Operation(
-            summary = "Xoá file theo ID",
-            description = "API xoá file khỏi hệ thống."
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Xoá thành công"),
-            @ApiResponse(responseCode = "404", description = "Không tìm thấy file", content = @Content)
-    })
+    // -------------------------------
+    // Xóa file
+    // -------------------------------
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFile(@PathVariable Long id) throws IOException {
         fileService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    // ---------------------------------------------
-    // SERVE FILE PUBLIC
-    // ---------------------------------------------
-    @Operation(
-            summary = "Tải file public",
-            description = "API public để tải file trực tiếp bằng tên file."
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Tải file thành công",
-                    content = @Content(mediaType = "application/octet-stream")),
-            @ApiResponse(responseCode = "404", description = "File không tồn tại", content = @Content)
-    })
-    @GetMapping("/public/{fileName}")
+    // -------------------------------
+    // Serve file public
+    // -------------------------------
+    @GetMapping("/public/{fileName:.+}") // .+ để lấy cả extension
     public ResponseEntity<Resource> serveFile(@PathVariable String fileName) throws IOException {
-        Path path = Paths.get("uploads").resolve(fileName);
+        Path path = Paths.get(fileService.getUploadDir()).toAbsolutePath().resolve(fileName);
         Resource resource = new UrlResource(path.toUri());
 
-        if (!resource.exists()) {
+        if (!resource.exists() || !resource.isReadable()) {
             return ResponseEntity.notFound().build();
         }
 
         String contentType = Files.probeContentType(path);
-
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(
-                        contentType != null ? contentType : "application/octet-stream"))
+                .contentType(MediaType.parseMediaType(contentType != null ? contentType : "application/octet-stream"))
                 .body(resource);
     }
 }
