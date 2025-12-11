@@ -5,7 +5,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -116,18 +115,6 @@ public class GlobalExceptionHandler {
                         "success", false,
                         "message", message,
                         "errorCode", errorCode,
-                        "timestamp", LocalDateTime.now()
-                )
-        );
-    }
-
-    // --- 6. Không có quyền ---
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<?> handleAccessDenied(AccessDeniedException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                Map.of(
-                        "success", false,
-                        "message", "Bạn không có quyền truy cập tài nguyên này.",
                         "timestamp", LocalDateTime.now()
                 )
         );
