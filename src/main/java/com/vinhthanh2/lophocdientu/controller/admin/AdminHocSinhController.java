@@ -21,7 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/quan-tri/hocsinh")
+@RequestMapping("/quan-tri/hoc-sinh")
 @Getter
 @Setter
 @AllArgsConstructor

@@ -29,7 +29,7 @@ public class AdminRepo {
                     SELECT * FROM auth.fn_cap_nhat_thong_tin_quan_tri_vien(
                         :p_id,
                         :p_avatar,
-                        :p_ho_ten,
+                        :p_ho_ten
                     )
                 """;
 
