@@ -1,10 +1,10 @@
 package com.vinhthanh2.lophocdientu.service;
 
 import com.vinhthanh2.lophocdientu.dto.req.UpdatePassReq;
+import com.vinhthanh2.lophocdientu.dto.res.UserFullRes;
 import com.vinhthanh2.lophocdientu.entity.User;
 import com.vinhthanh2.lophocdientu.exception.AppException;
 import com.vinhthanh2.lophocdientu.mapper.UserMapper;
-import com.vinhthanh2.lophocdientu.repository.UserInfoRepo;
 import com.vinhthanh2.lophocdientu.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,9 +20,8 @@ public class AuthService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final UserInfoRepo userInfoRepo;
 
-    public Object getCurrentUserDto() {
+    public UserFullRes getCurrentUserDto() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated() ||
@@ -30,14 +29,9 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Người dùng chưa được xác thực");
         }
 
-        String role = auth.getAuthorities().iterator().next().getAuthority();
+        User user = userRepo.findByUsername(auth.getName()).get();
 
-        if (role.contains("ADMIN"))
-            return userMapper.toAdminDto(userInfoRepo.layQuanTriTheoUsername(auth.getName()));
-        else if (role.contains("TEACHER"))
-            return userMapper.toTeacherDto(userInfoRepo.layGiaoVienTheoUsername(auth.getName()));
-        else
-            return userMapper.toTeacherDto(userInfoRepo.layHocSinhTheoUsername(auth.getName()));
+        return userMapper.toUserFullDto(user);
     }
 
     public User getCurrentUser() {
@@ -79,13 +73,11 @@ public class AuthService {
             throw new AppException("INVALID_PASSWORD", "Mật khẩu mới không khớp");
         }
 
-        user.setPassword(passwordEncoder.encode(updatePassReq.getNewPass()));
-        userRepo.save(user);
+        userRepo.doiMatKhau(user.getId(), passwordEncoder.encode(updatePassReq.getNewPass()));
     }
 
     public void doiMatKhau(Long userId, UpdatePassReq updatePassReq) {
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new AppException("USER_NOT_FOUND", "Không tìm thấy người dùng"));
+        User user = userRepo.findById(userId);
 
         if (!passwordEncoder.matches(updatePassReq.getOldPass(), user.getPassword())) {
             throw new AppException("INVALID_PASSWORD", "Mật khẩu cũ không chính xác");
@@ -96,8 +88,7 @@ public class AuthService {
             throw new AppException("INVALID_PASSWORD", "Mật khẩu mới không khớp");
         }
 
-        user.setPassword(passwordEncoder.encode(updatePassReq.getNewPass()));
-        userRepo.save(user);
+        userRepo.doiMatKhau(user.getId(), passwordEncoder.encode(updatePassReq.getNewPass()));
     }
 
     public void datLaiMatKhauBoiAdmin(Long userId, String newPassword) {
@@ -105,10 +96,8 @@ public class AuthService {
             throw new AppException("INVALID_PASSWORD", "Mật khẩu mới không được để trống");
         }
 
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new AppException("USER_NOT_FOUND", "Không tìm thấy người dùng"));
+        User user = userRepo.findById(userId);
 
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepo.save(user);
+        userRepo.doiMatKhau(user.getId(), passwordEncoder.encode(newPassword));
     }
 }

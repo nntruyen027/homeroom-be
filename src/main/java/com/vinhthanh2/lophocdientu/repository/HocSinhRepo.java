@@ -2,8 +2,10 @@ package com.vinhthanh2.lophocdientu.repository;
 
 import com.vinhthanh2.lophocdientu.dto.req.StudentRegisterReq;
 import com.vinhthanh2.lophocdientu.dto.req.UpdateStudentReq;
+import com.vinhthanh2.lophocdientu.dto.sql.HocSinhPro;
 import com.vinhthanh2.lophocdientu.entity.User;
 import com.vinhthanh2.lophocdientu.exception.AppException;
+import com.vinhthanh2.lophocdientu.mapper.HocSinhMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -19,6 +21,8 @@ public class HocSinhRepo {
     @PersistenceContext
     private EntityManager entityManager;
 
+    private final HocSinhMapper hocSinhMapper;
+
     // ============================================================
     // LẤY HỌC SINH THEO LỚP
     // ============================================================
@@ -32,12 +36,14 @@ public class HocSinhRepo {
                     )
                 """;
 
-        return entityManager.createNativeQuery(sql, User.class)
+        List<HocSinhPro> pros = entityManager.createNativeQuery(sql, HocSinhPro.class)
                 .setParameter("p_lop_id", lopId)
                 .setParameter("p_search", search)
                 .setParameter("p_offset", offset)
                 .setParameter("p_limit", size)
-                .getResultList();
+                .getResultList().stream().toList();
+
+        return pros.stream().map(hocSinhMapper::fromHocSinhPro).toList();
     }
 
     // ============================================================
@@ -113,7 +119,7 @@ public class HocSinhRepo {
                     )
                 """;
 
-        return (User) entityManager.createNativeQuery(sql, User.class)
+        return hocSinhMapper.fromHocSinhPro((HocSinhPro) entityManager.createNativeQuery(sql, HocSinhPro.class)
                 .setParameter("p_username", req.getUsername())
                 .setParameter("p_password", req.getPassword())
                 .setParameter("p_avatar", req.getAvatar())
@@ -149,7 +155,7 @@ public class HocSinhRepo {
                 .setParameter("p_sdt_ph_khac", req.getSdtPhKhac())
                 .setParameter("p_xa_id", req.getXaId())
 
-                .getSingleResult();
+                .getSingleResult());
     }
 
     // ============================================================
@@ -193,7 +199,7 @@ public class HocSinhRepo {
                     )
                 """;
 
-        return (User) entityManager.createNativeQuery(sql, User.class)
+        return hocSinhMapper.fromHocSinhPro((HocSinhPro) entityManager.createNativeQuery(sql, HocSinhPro.class)
                 .setParameter("p_username", req.getUsername())
                 .setParameter("p_avatar", req.getAvatar())
                 .setParameter("p_ho_ten", req.getHoTen())
@@ -228,7 +234,7 @@ public class HocSinhRepo {
                 .setParameter("p_sdt_ph_khac", req.getSdtPhKhac())
                 .setParameter("p_xa_id", req.getXaId())
 
-                .getSingleResult();
+                .getSingleResult());
     }
 
     // ============================================================

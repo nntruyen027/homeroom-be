@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users", schema = "auth")
 @Getter
@@ -27,11 +29,24 @@ public class User {
     @Column
     private String avatar;
 
-    @Column(nullable = false, length = 30)
-    private String role; // STUDENT, TEACHER, ADMIN
+    @Transient
+    private List<String> roles;
 
-    @Column(nullable = false)
+    @Transient
+    private List<String> permissions;
+
+    @Column(name = "ho_ten", nullable = false)
     private String hoTen;
+
+    // ===== ĐỊA CHỈ =====
+    @Column(name = "xa_id")
+    private Long xaId;
+
+    @Column(name = "lop_id")
+    private Long lopId;
+
+    @Column(name = "dia_chi_chi_tiet")
+    private String diaChiChiTiet;
 
     @Transient
     private Xa xa;
@@ -39,68 +54,88 @@ public class User {
     @Transient
     private Lop lop;
 
-    @Column
-    private String diaChiChiTiet;
-
-    // === Thông tin thêm ===
-    @Column
+    // ===== THÔNG TIN CÁ NHÂN =====
+    @Column(name = "ngay_sinh")
     private String ngaySinh;
-    @Column
+
+    @Column(name = "la_nam")
     private Boolean laNam;
-    @Column
+
+    @Column(name = "so_thich")
     private String soThich;
-    @Column
+
+    @Column(name = "mon_hoc_yeu_thich")
     private String monHocYeuThich;
-    @Column
+
+    @Column(name = "diem_manh")
     private String diemManh;
-    @Column
+
+    @Column(name = "diem_yeu")
     private String diemYeu;
-    @Column
+
+    @Column(name = "nghe_nghiep_mong_muon")
     private String ngheNghiepMongMuon;
-    @Column
+
+    @Column(name = "nhan_xet_giao_vien")
     private String nhanXetGiaoVien;
-    @Column
+
+    @Column(name = "ghi_chu")
     private String ghiChu;
 
-    @Column
+    // ===== RIASEC =====
+    @Column(name = "realistic_score")
     private Integer realisticScore;
-    @Column
+
+    @Column(name = "investigative_score")
     private Integer investigativeScore;
-    @Column
+
+    @Column(name = "artistic_score")
     private Integer artisticScore;
-    @Column
+
+    @Column(name = "social_score")
     private Integer socialScore;
-    @Column
+
+    @Column(name = "enterprising_score")
     private Integer enterprisingScore;
-    @Column
+
+    @Column(name = "conventional_score")
     private Integer conventionalScore;
 
-    @Column(length = 500)
+    @Column(name = "assessment_result", length = 500)
     private String assessmentResult;
 
-    // Thông tin phụ huynh
-    @Column
+    // ===== PHỤ HUYNH =====
+    @Column(name = "ten_cha")
     private String tenCha;
-    @Column
+
+    @Column(name = "ns_cha")
     private String nsCha;
-    @Column
+
+    @Column(name = "sdt_cha")
     private String sdtCha;
-    @Column
+
+    @Column(name = "ten_me")
     private String tenMe;
-    @Column
+
+    @Column(name = "ns_me")
     private String nsMe;
-    @Column
+
+    @Column(name = "sdt_me")
     private String sdtMe;
-    @Column
+
+    @Column(name = "ten_ph_khac")
     private String tenPhKhac;
-    @Column
+
+    @Column(name = "ns_ph_khac")
     private String nsPhKhac;
-    @Column
+
+    @Column(name = "sdt_ph_khac")
     private String sdtPhKhac;
 
-    // Dành cho giáo viên
-    @Column
+    // ===== GIÁO VIÊN =====
+    @Column(name = "bo_mon")
     private String boMon;
-    @Column
+
+    @Column(name = "chuc_vu")
     private String chucVu;
 }

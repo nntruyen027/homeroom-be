@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
     private final AdminService adminService;
 
-    @Operation(summary = "Sửa thông tin quản tr")
+    @Operation(summary = "Sửa thông tin quản trị")
     @SecurityApiResponses
     @ApiResponse(responseCode = "200", description = "Sửa thông tin quản trị thành công")
     @PutMapping("")

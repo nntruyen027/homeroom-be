@@ -1,32 +1,59 @@
 package com.vinhthanh2.lophocdientu.service;
 
+import com.vinhthanh2.lophocdientu.repository.PermissionRepo;
 import com.vinhthanh2.lophocdientu.repository.UserRepo;
-import org.springframework.security.core.userdetails.*;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
-public class CustomUserDetailsService implements UserDetailsService {
-    private final UserRepo userRepository;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-    public CustomUserDetailsService(UserRepo userRepository) {
-        this.userRepository = userRepository;
-    }
+@Service
+@AllArgsConstructor
+public class CustomUserDetailsService implements UserDetailsService {
+
+    private final UserRepo userRepository;
+    private final PermissionRepo permissionRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        String role = user.getRole();
-        if (!role.startsWith("ROLE_")) {
-            role = "ROLE_" + role;
-        }
+        // Lấy user từ DB
+        Optional<com.vinhthanh2.lophocdientu.entity.User> optionalUser = userRepository.findByUsername(username);
+        com.vinhthanh2.lophocdientu.entity.User user = optionalUser.orElseThrow(
+                () -> new UsernameNotFoundException("Không tìm thấy người dùng: " + username)
+        );
 
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
-                .password(user.getPassword())
-                .roles(role.replace("ROLE_", "")) // chỉ truyền tên role cho .roles()
-                .build();
+        // Lấy permission của user
+        Set<String> permissions = permissionRepo.timPermissionTheoUserId(user.getId());
+
+        // Chuyển permissions thành GrantedAuthority
+        Set<GrantedAuthority> permissionAuthorities = permissions.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
+
+        // Chuyển roles thành GrantedAuthority dạng ROLE_*
+        Set<GrantedAuthority> roleAuthorities = user.getRoles() == null ? Set.of() :
+                user.getRoles().stream()
+                        .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toSet());
+
+        // Gộp role + permission và loại bỏ trùng lặp
+        Set<GrantedAuthority> authorities = Stream.concat(roleAuthorities.stream(), permissionAuthorities.stream())
+                .collect(Collectors.toSet());
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                authorities
+        );
     }
-
 }

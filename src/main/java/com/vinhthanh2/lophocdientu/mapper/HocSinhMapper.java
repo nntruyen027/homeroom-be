@@ -8,8 +8,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {XaMapper.class, TinhMapper.class, LopMapper.class})
 public interface HocSinhMapper {
-
-    @Mapping(source = "role", target = "role")
+    
     StudentRes toStudentDto(User user);
 
     @Mapping(source = "outId", target = "id")
@@ -22,5 +21,6 @@ public interface HocSinhMapper {
     @Mapping(source = "truongId", target = "lop.truong.id")
     @Mapping(source = "tenTruong", target = "lop.truong.ten")
     User fromHocSinhPro(HocSinhPro dto);
+
 
 }

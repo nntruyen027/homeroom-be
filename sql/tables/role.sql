@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS auth.roles;
+
+CREATE TABLE auth.roles
+(
+    id BIGSERIAL PRIMARY KEY,
+    code VARCHAR(50) UNIQUE NOT NULL,
+    name VARCHAR(500)
+);
+
+
+
