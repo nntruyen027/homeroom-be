@@ -9,11 +9,14 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.models.GroupedOpenApi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
+    @Value("${swagger.server.url}")
+    private String serverUrl;
 
     // ⭐ Chỉ quét controller trong package này
     @Bean
@@ -29,7 +32,7 @@ public class OpenApiConfig {
     public OpenAPI api() {
 
         return new OpenAPI()
-                .addServersItem(new Server().url("https://homeroomapi.tmqcreator.top"))
+                .addServersItem(new Server().url(serverUrl))
                 .info(new Info()
                         .title("Sổ chủ nhiệm điện tử API")
                         .version("1.0.0")

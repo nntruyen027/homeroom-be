@@ -21,8 +21,12 @@ public class DataInitializer {
     private static final String SUPER_ADMIN_CODE = "SUPER_ADMIN";
     private static final String SUPER_ADMIN_USERNAME = "superadmin";
     private static final String DEFAULT_PASSWORD = "Homeroom@2025";
+    private static final String TEACHER_CODE = "TEACHER";
+    private static final String STUDENT_CODE = "STUDENT";
+    private static final String PARENT_CODE = "PARENT";
 
     private static final List<String> DEFAULT_PERMISSIONS = List.of(
+            "ADMIN_MANAGE",
             "USER_MANAGE",
             "ROLE_MANAGE",
             "CLASS_MANAGE",
@@ -52,6 +56,18 @@ public class DataInitializer {
             // 2️⃣ Tạo role SUPER_ADMIN nếu chưa có
             if (!roleRepo.coVaiTroTheoMa(SUPER_ADMIN_CODE)) {
                 roleRepo.taoVaiTro(new RoleReq("Quản trị tối cao", SUPER_ADMIN_CODE));
+            }
+
+            if (!roleRepo.coVaiTroTheoMa(TEACHER_CODE)) {
+                roleRepo.taoVaiTro(new RoleReq("Giáo viên ", TEACHER_CODE));
+            }
+
+            if (!roleRepo.coVaiTroTheoMa(STUDENT_CODE)) {
+                roleRepo.taoVaiTro(new RoleReq("Học sinh ", STUDENT_CODE));
+            }
+
+            if (!roleRepo.coVaiTroTheoMa(PARENT_CODE)) {
+                roleRepo.taoVaiTro(new RoleReq("Phụ huynh ", PARENT_CODE));
             }
 
             // 3️⃣ Phân quyền cho role SUPER_ADMIN

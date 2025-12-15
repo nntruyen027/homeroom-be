@@ -9,14 +9,14 @@ CREATE OR REPLACE FUNCTION auth.fn_lay_tat_ca_vai_tro(
 AS
 $$
 BEGIN
-    SELECT *
-    FROM auth.v_role r
-    WHERE p_search IS NULL
-       OR p_search = ''
-       OR unaccent(lower(r.name)) LIKE '%' || unaccent(lower(p_search)) || '%'
-       OR unaccent(lower(r.code)) LIKE '%' || unaccent(lower(p_search)) || '%'
-    ORDER BY r.name
-    OFFSET p_offset LIMIT p_limit;
+    RETURN QUERY SELECT *
+                 FROM auth.v_role r
+                 WHERE p_search IS NULL
+                    OR p_search = ''
+                    OR unaccent(lower(r.name)) LIKE '%' || unaccent(lower(p_search)) || '%'
+                    OR unaccent(lower(r.code)) LIKE '%' || unaccent(lower(p_search)) || '%'
+                 ORDER BY r.name
+                 OFFSET p_offset LIMIT p_limit;
 end;
 
 $$ LANGUAGE plpgsql;

@@ -19,7 +19,15 @@ BEGIN
         RAISE EXCEPTION 'Vai trò với ID % không tồn tại', p_role_id;
     END IF;
 
-    -- Duyệt từng permission code
+    -- 1️⃣ Xóa những quyền hiện có mà không nằm trong danh sách mới
+    DELETE
+    FROM auth.role_permissions
+    WHERE role_id = p_role_id
+      AND permission_id NOT IN (SELECT id
+                                FROM auth.permissions
+                                WHERE code = ANY (p_permission_codes));
+
+    -- 2️⃣ Duyệt từng permission code trong danh sách mới để thêm nếu chưa có
     FOREACH v_code IN ARRAY p_permission_codes
         LOOP
             -- Kiểm tra permission tồn tại
@@ -32,7 +40,7 @@ BEGIN
                 RAISE EXCEPTION 'Permission với mã % không tồn tại', v_code;
             END IF;
 
-            -- Kiểm tra xem permission đã gán cho role chưa
+            -- Thêm quyền nếu chưa tồn tại
             IF NOT EXISTS (SELECT 1
                            FROM auth.role_permissions
                            WHERE role_id = p_role_id
@@ -42,6 +50,7 @@ BEGIN
             END IF;
         END LOOP;
 
+    -- Trả về thông tin role
     RETURN QUERY SELECT * FROM auth.v_role v WHERE v.out_id = p_role_id;
 END;
 $$;

@@ -1,7 +1,10 @@
 package com.vinhthanh2.lophocdientu.controller;
 
+import com.vinhthanh2.lophocdientu.dto.req.LoginReq;
 import com.vinhthanh2.lophocdientu.dto.req.TeacherRegisterReq;
 import com.vinhthanh2.lophocdientu.dto.req.UpdatePassReq;
+import com.vinhthanh2.lophocdientu.dto.res.LoginRes;
+import com.vinhthanh2.lophocdientu.dto.res.UserFullRes;
 import com.vinhthanh2.lophocdientu.exception.AppException;
 import com.vinhthanh2.lophocdientu.mapper.UserMapper;
 import com.vinhthanh2.lophocdientu.repository.UserRepo;
@@ -21,8 +24,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -55,17 +56,18 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Sai username hoặc password", content = @Content)
     })
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> request) {
+    public LoginRes login(@RequestBody LoginReq request) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.get("username"),
-                            request.get("password")
+                            request.getUsername(),
+                            request.getPassword()
                     )
             );
 
-            String token = jwtService.generateToken(request.get("username"));
-            return Map.of("token", token);
+            String token = jwtService.generateToken(request.getUsername());
+            UserFullRes user = userMapper.toUserFullDto(userRepository.findByUsername(request.getUsername()).get());
+            return new LoginRes(token, user);
 
         } catch (BadCredentialsException ex) {
             throw new AppException("BAD_CREDENTIAL", "Thông tin đăng nhập không hợp lệ");

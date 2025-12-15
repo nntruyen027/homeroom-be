@@ -19,7 +19,15 @@ BEGIN
         RAISE EXCEPTION 'Người dùng với ID % không tồn tại', p_user_id;
     END IF;
 
-    -- Duyệt từng role code
+    -- 1️⃣ Xóa các role hiện có mà không nằm trong danh sách mới
+    DELETE
+    FROM auth.user_roles
+    WHERE user_id = p_user_id
+      AND role_id NOT IN (SELECT id
+                          FROM auth.roles
+                          WHERE code = ANY (p_role_codes));
+
+    -- 2️⃣ Duyệt từng role code trong danh sách mới để thêm nếu chưa có
     FOREACH v_code IN ARRAY p_role_codes
         LOOP
             -- Kiểm tra role tồn tại
@@ -32,7 +40,7 @@ BEGIN
                 RAISE EXCEPTION 'Role với mã % không tồn tại', v_code;
             END IF;
 
-            -- Kiểm tra xem role đã gán cho user chưa
+            -- Thêm role nếu chưa gán cho user
             IF NOT EXISTS (SELECT 1
                            FROM auth.user_roles
                            WHERE user_id = p_user_id
@@ -42,6 +50,7 @@ BEGIN
             END IF;
         END LOOP;
 
+    -- Trả về thông tin user
     RETURN QUERY SELECT * FROM auth.v_users_full WHERE out_id = p_user_id LIMIT 1;
 END;
 $$;

@@ -13,21 +13,30 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/quan-tri")
 @Getter
 @Setter
 @AllArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAuthority('USER_MANAGE')")
 @SecurityRequirement(name = "BearerAuth")
-@Tag(name = "Quản lý cá nhân admin", description = "Các API quản lý thông tin cá nhân admin")
+@Tag(name = "Quản lý cá nhân", description = "Các API quản lý thông tin cá nhân admin")
 public class AdminController {
     private final AdminService adminService;
+
+    @Operation(summary = "Lấy danh sách quản trị")
+    @SecurityApiResponses
+    @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
+    @PutMapping("")
+    public ResponseEntity<AdminRes> layDsQuanTri(
+            @RequestParam String search,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        return ResponseEntity.ok(adminService);
+    }
 
     @Operation(summary = "Sửa thông tin quản trị")
     @SecurityApiResponses
