@@ -3,8 +3,7 @@ package com.vinhthanh2.lophocdientu.controller;
 import com.vinhthanh2.lophocdientu.dto.req.LoginReq;
 import com.vinhthanh2.lophocdientu.dto.req.TeacherRegisterReq;
 import com.vinhthanh2.lophocdientu.dto.req.UpdatePassReq;
-import com.vinhthanh2.lophocdientu.dto.res.LoginRes;
-import com.vinhthanh2.lophocdientu.dto.res.UserFullRes;
+import com.vinhthanh2.lophocdientu.dto.res.*;
 import com.vinhthanh2.lophocdientu.exception.AppException;
 import com.vinhthanh2.lophocdientu.mapper.GiaoVienMapper;
 import com.vinhthanh2.lophocdientu.repository.UserRepo;
@@ -86,7 +85,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Dữ liệu không hợp lệ", content = @Content)
     })
     @PostMapping("/dang-ky-giao-vien")
-    public ResponseEntity<?> dangKyGiaoVien(@RequestBody TeacherRegisterReq req) {
+    public ResponseEntity<TeacherRes> dangKyGiaoVien(@RequestBody TeacherRegisterReq req) {
         return ResponseEntity.ok(giaoVienService.dangKyGiaoVien(req));
     }
 
@@ -101,9 +100,9 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
     })
     @GetMapping("/tinh")
-    public ResponseEntity<?> layDsTinh(@RequestParam(required = false, defaultValue = "") String search,
-                                       @RequestParam(defaultValue = "1") int page,
-                                       @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<PageResponse<TinhRes>> layDsTinh(@RequestParam(required = false, defaultValue = "") String search,
+                                                           @RequestParam(defaultValue = "1") int page,
+                                                           @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(tinhService.layDsTinh(search, page, size));
     }
 
@@ -118,10 +117,10 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
     })
     @GetMapping("/tinh/{tinhId}/xa")
-    public ResponseEntity<?> layDsXa(@RequestParam(required = false, defaultValue = "") String search,
-                                     @PathVariable Long tinhId,
-                                     @RequestParam(defaultValue = "1") int page,
-                                     @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<PageResponse<XaRes>> layDsXa(@RequestParam(required = false, defaultValue = "") String search,
+                                                       @PathVariable Long tinhId,
+                                                       @RequestParam(defaultValue = "1") int page,
+                                                       @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(xaService.layDsXa(search, tinhId, page, size));
     }
 
@@ -139,7 +138,7 @@ public class AuthController {
     })
     @SecurityRequirement(name = "BearerAuth")
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser() {
+    public ResponseEntity<UserFullRes> getCurrentUser() {
         return ResponseEntity.ok(authService.getCurrentUserDto());
     }
 
@@ -158,7 +157,7 @@ public class AuthController {
     })
     @SecurityRequirement(name = "BearerAuth")
     @PutMapping("/doi-mat-khau")
-    public ResponseEntity<?> doiMatKhau(@RequestBody UpdatePassReq updatePassReq) {
+    public ResponseEntity<Void> doiMatKhau(@RequestBody UpdatePassReq updatePassReq) {
         authService.doiMatKhau(updatePassReq);
         return ResponseEntity.ok().build();
     }

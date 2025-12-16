@@ -15,7 +15,7 @@ import org.mapstruct.Mapping;
         }
 )
 public interface GiaoVienMapper {
-
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "xaId", target = "xa.id")
     @Mapping(source = "tenXa", target = "xa.ten")
     @Mapping(source = "tinhId", target = "xa.tinh.id")

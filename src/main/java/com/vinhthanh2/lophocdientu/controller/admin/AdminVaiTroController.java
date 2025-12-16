@@ -49,7 +49,7 @@ public class AdminVaiTroController {
             @ApiResponse(responseCode = "200", description = "Tạo thành công"),
     })
     @SecurityApiResponses
-    @PutMapping("")
+    @PostMapping("")
     public RoleRes taoVaiTro(@RequestBody RoleReq roleReq) {
         return roleService.taoVaiTro(roleReq);
     }

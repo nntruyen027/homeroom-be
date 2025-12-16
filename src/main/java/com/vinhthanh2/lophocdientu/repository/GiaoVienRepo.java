@@ -69,7 +69,7 @@ public class GiaoVienRepo {
                         :p_password,
                         :p_ho_ten,
                         :p_bo_mon,
-                        :p_chuc_vu
+                        :p_chuc_vu,
                         :p_ngay_sinh,
                         :p_la_nam,
                         :p_xa_id,
@@ -86,6 +86,7 @@ public class GiaoVienRepo {
                 .setParameter("p_bo_mon", req.getBoMon())
                 .setParameter("p_chuc_vu", req.getChucVu())
                 .setParameter("p_xa_id", req.getXaId())
+                .setParameter("p_ngay_sinh", req.getNgaySinh())
                 .setParameter("p_dia_chi_chi_tiet", req.getDiaChiChiTiet())
                 .getSingleResult());
     }

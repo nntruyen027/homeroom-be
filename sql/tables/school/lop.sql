@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS school.lop CASCADE;
+
 CREATE TABLE school.lop
 (
     id           BIGSERIAL PRIMARY KEY,
@@ -8,5 +10,5 @@ CREATE TABLE school.lop
     giao_vien_id BIGINT,
 
     CONSTRAINT fk_truong FOREIGN KEY (truong_id) REFERENCES school.truong (id) ON DELETE SET NULL,
-    CONSTRAINT fk_giao_vien FOREIGN KEY (giao_vien_id) REFERENCES auth.giao_vien (user_id) ON DELETE SET NULL
+    CONSTRAINT fk_giao_vien FOREIGN KEY (giao_vien_id) REFERENCES auth.users (id) ON DELETE CASCADE
 );

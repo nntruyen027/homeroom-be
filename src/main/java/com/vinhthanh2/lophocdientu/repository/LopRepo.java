@@ -1,6 +1,5 @@
 package com.vinhthanh2.lophocdientu.repository;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinhthanh2.lophocdientu.dto.req.LopReq;
 import com.vinhthanh2.lophocdientu.dto.res.LopRes;
@@ -107,8 +106,9 @@ public class LopRepo {
 
     @Transactional
     public LopRes taoLop(LopReq lopReq, Long giaoVienId) {
+        ;
         String sql = """
-                    select school.fn_tao_lop(
+                    select * from school.fn_tao_lop(
                         :p_ten,
                         :p_hinh_anh,
                         :p_truong_id,
@@ -116,28 +116,21 @@ public class LopRepo {
                     )
                 """;
 
-        String json = (String) entityManager.createNativeQuery(sql)
+        LopPro lopPro = (LopPro) entityManager.createNativeQuery(sql, LopPro.class)
                 .setParameter("p_ten", lopReq.getTen())
                 .setParameter("p_hinh_anh", lopReq.getHinhAnh())
                 .setParameter("p_truong_id", lopReq.getTruongId())
                 .setParameter("p_giao_vien_id", giaoVienId)
                 .getSingleResult();
 
-        try {
+        return lopMapper.toDto(lopPro);
 
-            LopPro lopPro = objectMapper.readValue(json, LopPro.class);
-
-
-            return lopMapper.toDto(lopPro);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Lỗi parse JSON", e);
-        }
     }
 
     @Transactional
     public LopRes suaLop(Long id, LopReq lopReq, Long nguoiSuaId) {
         String sql = """
-                    select school.fn_sua_lop(
+                    select * from school.fn_sua_lop(
                         :p_id,
                         :p_ten,
                         :p_hinh_anh,
@@ -146,7 +139,7 @@ public class LopRepo {
                     )
                 """;
 
-        String json = (String) entityManager.createNativeQuery(sql)
+        LopPro lopPro = (LopPro) entityManager.createNativeQuery(sql, LopPro.class)
                 .setParameter("p_id", id)
                 .setParameter("p_ten", lopReq.getTen())
                 .setParameter("p_hinh_anh", lopReq.getHinhAnh())
@@ -154,14 +147,7 @@ public class LopRepo {
                 .setParameter("p_nguoi_sua_id", nguoiSuaId)
                 .getSingleResult();
 
-
-        try {
-            LopPro lopPro = objectMapper.readValue(json, LopPro.class);
-
-            return lopMapper.toDto(lopPro);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Lỗi parse JSON", e);
-        }
+        return lopMapper.toDto(lopPro);
     }
 
     @Transactional

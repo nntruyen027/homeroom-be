@@ -1,4 +1,6 @@
-CREATE OR REPLACE FUNCTION school.fn_dem_tat_ca_giao_vien(
+DROP FUNCTION IF EXISTS school.fn_dem_tat_ca_truong;
+
+CREATE OR REPLACE FUNCTION school.fn_dem_tat_ca_truong(
     p_search VARCHAR(500)
 )
     RETURNS BIGINT

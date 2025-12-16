@@ -4,6 +4,7 @@ import com.vinhthanh2.lophocdientu.dto.res.UserFullRes;
 import com.vinhthanh2.lophocdientu.dto.sql.UserFullPro;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.Arrays;
@@ -12,6 +13,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
+    @Mapping(source = "id", target = "id")
     UserFullRes toUserFullRes(UserFullPro userFullPro);
 
     @AfterMapping

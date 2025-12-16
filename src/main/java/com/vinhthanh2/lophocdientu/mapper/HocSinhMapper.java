@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {XaMapper.class, TinhMapper.class, LopMapper.class})
 public interface HocSinhMapper {
 
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "xaId", target = "xa.id")
     @Mapping(source = "tenXa", target = "xa.ten")
     @Mapping(source = "tinhId", target = "xa.tinh.id")

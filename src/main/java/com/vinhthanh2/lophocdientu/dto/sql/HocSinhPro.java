@@ -12,7 +12,7 @@ import java.util.Date;
 public class HocSinhPro {
 
     // ===== auth.users =====
-    private Long userId;          // u.id AS user_id
+    private Long id;          // u.id AS user_id
     private String username;      // u.username
     private String hoTen;          // u.ho_ten
     private String avatar;         // u.avatar

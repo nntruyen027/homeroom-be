@@ -27,6 +27,10 @@ BEGIN
             v_user_id, p_ngay_sinh, p_la_nam, p_xa_id, p_dia_chi
             );
 
+    IF NOT EXISTS(SELECT 1 FROM school.lop WHERE id = p_lop_id) THEN
+        RAISE EXCEPTION 'Lớp với id % không tồn tại', p_lop_id;
+    end if;
+    
     -- 3. Tạo học sinh
     INSERT INTO auth.hoc_sinh(user_id, lop_id)
     VALUES (v_user_id, p_lop_id);

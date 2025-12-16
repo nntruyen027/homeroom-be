@@ -2,6 +2,8 @@ package com.vinhthanh2.lophocdientu.dto.req;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class StudentRegisterReq {
     private String username;
@@ -16,6 +18,6 @@ public class StudentRegisterReq {
     private String diaChiChiTiet;
 
     // === Thông tin thêm ===
-    private String ngaySinh;
+    private LocalDate ngaySinh;
     private Boolean laNam;
 }

@@ -12,6 +12,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
         uses = {XaMapper.class}
 )
 public interface XaMapper {
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "tenTinh", target = "tinh.ten")
     @Mapping(source = "tinhId", target = "tinh.id")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

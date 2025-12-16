@@ -11,6 +11,7 @@ public class LopRes {
     private String hinhAnh;
 
     private TruongRes truong;
+    private Long giaoVienId;
 
-    private TeacherRes giaoVien;
+    private String tenGiaoVien;
 }

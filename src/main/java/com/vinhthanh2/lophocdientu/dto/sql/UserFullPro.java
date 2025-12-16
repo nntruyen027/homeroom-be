@@ -19,7 +19,7 @@ public class UserFullPro {
 
     private String avatar;
 
-    private boolean isActive;
+    private Boolean isActive;
 
     private Date createdAt;
 

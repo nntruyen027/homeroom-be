@@ -21,6 +21,11 @@ BEGIN
         RAISE EXCEPTION 'Trường với id % không tồn tại', p_truong_id;
     END IF;
 
+    IF NOT EXISTS(SELECT 1 FROM auth.users WHERE id = p_nguoi_tao) THEN
+        RAISE EXCEPTION
+            'Không tồn tại user với id %', p_nguoi_tao;
+    end if;
+
     -- 2️⃣ Kiểm tra quyền ADMIN hoặc TEACHER
     SELECT EXISTS (SELECT 1
                    FROM auth.user_roles ur
@@ -33,6 +38,7 @@ BEGIN
         RAISE EXCEPTION
             'Bạn không có quyền tạo lớp (chỉ ADMIN hoặc GIÁO VIÊN)';
     END IF;
+
 
     -- 3️⃣ Tạo lớp
     INSERT INTO school.lop (ten,
@@ -49,6 +55,7 @@ BEGIN
     RETURN QUERY
         SELECT *
         FROM school.v_lop l
-        WHERE l.out_id = v_new_id;
+        WHERE l.out_id = v_new_id
+        LIMIT 1;
 END;
 $$;

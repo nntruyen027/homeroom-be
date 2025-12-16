@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
         XaMapper.class, TruongMapper.class
 })
 public interface TruongMapper {
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "xaId", target = "xa.id")
     @Mapping(source = "tenXa", target = "xa.ten")
     @Mapping(source = "tinhId", target = "xa.tinh.id")
