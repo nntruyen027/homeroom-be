@@ -106,7 +106,7 @@ public class LopRepo {
 
 
     @Transactional
-    public LopRes taoLop(LopReq lopReq) {
+    public LopRes taoLop(LopReq lopReq, Long giaoVienId) {
         String sql = """
                     select school.fn_tao_lop(
                         :p_ten,
@@ -120,7 +120,7 @@ public class LopRepo {
                 .setParameter("p_ten", lopReq.getTen())
                 .setParameter("p_hinh_anh", lopReq.getHinhAnh())
                 .setParameter("p_truong_id", lopReq.getTruongId())
-                .setParameter("p_giao_vien_id", lopReq.getGiaoVienId())
+                .setParameter("p_giao_vien_id", giaoVienId)
                 .getSingleResult();
 
         try {

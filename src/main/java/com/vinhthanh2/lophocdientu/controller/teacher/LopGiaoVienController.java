@@ -67,8 +67,7 @@ public class LopGiaoVienController {
             )
             @RequestBody LopReq lopReq
     ) {
-        lopReq.setGiaoVienId(authService.getCurrentUser().getId());
-        return lopService.taoLop(lopReq);
+        return lopService.taoLop(lopReq, authService.getCurrentUser().getId());
     }
 
     // ============================
@@ -94,7 +93,6 @@ public class LopGiaoVienController {
             )
             @RequestBody LopReq lopReq
     ) {
-        lopReq.setGiaoVienId(authService.getCurrentUser().getId());
         return lopService.suaLop(id, lopReq);
     }
 

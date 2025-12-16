@@ -9,6 +9,4 @@ public class LopReq {
     private String hinhAnh;
 
     private Long truongId;
-
-    private Long giaoVienId;
 }

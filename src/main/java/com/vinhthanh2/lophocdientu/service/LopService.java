@@ -57,8 +57,8 @@ public class LopService {
                 .build();
     }
 
-    public LopRes taoLop(LopReq lopReq) {
-        return (lopRepo.taoLop(lopReq));
+    public LopRes taoLop(LopReq lopReq, Long giaoVienId) {
+        return (lopRepo.taoLop(lopReq, giaoVienId));
     }
 
     public LopRes suaLop(Long id, LopReq lopReq) {
