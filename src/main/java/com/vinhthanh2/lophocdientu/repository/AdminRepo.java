@@ -1,83 +1,63 @@
 package com.vinhthanh2.lophocdientu.repository;
 
+import com.vinhthanh2.lophocdientu.dto.req.AdminRequest;
 import com.vinhthanh2.lophocdientu.dto.req.UpdateAdminReq;
-import com.vinhthanh2.lophocdientu.dto.sql.AdminPro;
+import com.vinhthanh2.lophocdientu.dto.res.UserFullRes;
 import com.vinhthanh2.lophocdientu.dto.sql.UserFullPro;
-import com.vinhthanh2.lophocdientu.entity.User;
 import com.vinhthanh2.lophocdientu.mapper.UserMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
 public class AdminRepo {
-
     @PersistenceContext
     private EntityManager entityManager;
+    private final UserMapper adminMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    private final UserMapper userMapper;
-
-    @SuppressWarnings("unchecked")
-    public Optional<User> layQuanTriTheoUsername(String username) {
+    public UserFullRes taoQuanTriVien(AdminRequest adminRequest) {
         String sql = """
-                SELECT * FROM auth.fn_lay_admin_theo_username(:p_username)
+                select  * from auth.fn_tao_nguoi_dung_quan_tri(
+                 :p_username, 
+                 :p_ho_ten,
+                :p_password,
+                
+                               :p_avatar
+                );
+                
                 """;
 
-        List<AdminPro> pros = entityManager.createNativeQuery(sql, AdminPro.class)
-                .setParameter("p_username", username)
-                .getResultList();
-
-        if (pros.isEmpty()) return Optional.empty();
-
-        return Optional.of(userMapper.fromAdminPro(pros.get(0)));
-    }
-
-    public User taoNguoiDungQuanTri(String username, String hoTen, String password, String avatar) {
-        String sql = """
-                SELECT * FROM auth.fn_tao_nguoi_dung_quan_tri(
-                              :p_username,
-                              :p_ho_ten,
-                              :p_password,
-                              :p_avatar
-                )
-                """;
         UserFullPro pro = (UserFullPro) entityManager.createNativeQuery(sql, UserFullPro.class)
-                .setParameter("p_username", username)
-                .setParameter("p_ho_ten", hoTen)
-                .setParameter("p_password", password)
-                .setParameter("p_avatar", avatar)
+                .setParameter("p_username", adminRequest.getUserName())
+                .setParameter("p_ho_ten", adminRequest.getHoTen())
+                .setParameter("p_password", passwordEncoder.encode(adminRequest.getPassword()))
+                .setParameter("p_avatar", adminRequest.getAvatar())
                 .getSingleResult();
-        return userMapper.fromUserFullPro(pro);
 
+        return adminMapper.toUserFullRes(pro);
     }
 
-    // ============================================================
-    // SỬA HỌC SINH
-    // ============================================================
-    @Transactional
-    public User suaCaNhanAdmin(Long id, UpdateAdminReq req) {
-
+    public UserFullRes capNhatQuanTriVien(Long id, UpdateAdminReq adminRequest) {
         String sql = """
-                    SELECT * FROM auth.fn_cap_nhat_thong_tin_quan_tri_vien(
-                        :p_id,
+                        select  * from auth.fn_cap_nhat_thong_tin_quan_tri_vien(
+                        :id,
                         :p_avatar,
                         :p_ho_ten
-                    )
+                
+                        );
+                
                 """;
 
-        AdminPro pro = (AdminPro) entityManager.createNativeQuery(sql, AdminPro.class)
-                .setParameter("p_id", id)
-                .setParameter("p_avatar", req.getAvatar())
-                .setParameter("p_ho_ten", req.getHoTen())
+        UserFullPro pro = (UserFullPro) entityManager.createNativeQuery(sql, UserFullPro.class)
+                .setParameter("id", id)
+                .setParameter("p_ho_ten", adminRequest.getHoTen())
+                .setParameter("p_avatar", adminRequest.getAvatar())
                 .getSingleResult();
 
-        return userMapper.fromAdminPro(pro);
+        return adminMapper.toUserFullRes(pro);
     }
-
 }

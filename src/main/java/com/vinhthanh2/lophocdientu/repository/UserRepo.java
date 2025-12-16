@@ -1,7 +1,8 @@
 package com.vinhthanh2.lophocdientu.repository;
 
+import com.vinhthanh2.lophocdientu.dto.res.UserFullRes;
+import com.vinhthanh2.lophocdientu.dto.sql.UserAuthPro;
 import com.vinhthanh2.lophocdientu.dto.sql.UserFullPro;
-import com.vinhthanh2.lophocdientu.entity.User;
 import com.vinhthanh2.lophocdientu.mapper.UserMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,7 +20,7 @@ public class UserRepo {
     private final UserMapper userMapper;
 
     @SuppressWarnings("unchecked")
-    public Optional<User> findByUsername(String username) {
+    public Optional<UserFullRes> findByUsername(String username) {
         String sql = """
                 SELECT * FROM auth.fn_lay_nguoi_dung_theo_username(:p_username);
                 """;
@@ -32,7 +33,38 @@ public class UserRepo {
             return Optional.empty();
         }
 
-        return Optional.of(userMapper.fromUserFullPro(list.get(0)));
+        return Optional.of(userMapper.toUserFullRes(list.get(0)));
+    }
+
+    @SuppressWarnings("unchecked")
+    public Optional<UserAuthPro> findAuthByUsername(String username) {
+        String sql = """
+                SELECT * FROM auth.fn_lay_thong_tin_auth_theo_username(:p_username);
+                """;
+
+        List<UserAuthPro> list = entityManager.createNativeQuery(sql, UserAuthPro.class)
+                .setParameter("p_username", username)
+                .getResultList();
+
+        if (list.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of((list.get(0)));
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public UserAuthPro findAuthById(Long id) {
+        String sql = """
+                SELECT * FROM auth.fn_lay_thong_tin_auth_theo_id(:p_id);
+                """;
+
+        List<UserAuthPro> list = entityManager.createNativeQuery(sql, UserAuthPro.class)
+                .setParameter("p_id", id)
+                .getResultList();
+
+        return (list.get(0));
     }
 
     public boolean doiMatKhau(Long userId, String newPass) {
@@ -44,7 +76,7 @@ public class UserRepo {
         return true;
     }
 
-    public User findById(Long userId) {
+    public UserFullRes findById(Long userId) {
         String sql = """
                 SELECT * FROM auth.fn_lay_nguoi_dung_theo_id(:p_user_id);
                 """;
@@ -53,10 +85,10 @@ public class UserRepo {
                 .setParameter("p_user_id", userId)
                 .getSingleResult();
 
-        return userMapper.fromUserFullPro(pro);
+        return userMapper.toUserFullRes(pro);
     }
 
-    public User phanVaiTroChoNguoiDung(Long id, List<String> roles) {
+    public UserFullRes phanVaiTroChoNguoiDung(Long id, List<String> roles) {
         String sql = """
                 SELECT * FROM auth.fn_phan_vai_tro_cho_nguoi_dung(:p_id, :p_roles);
                 """;
@@ -66,6 +98,6 @@ public class UserRepo {
                 .setParameter("p_roles", roles.toArray(new String[0]))
                 .getSingleResult();
 
-        return userMapper.fromUserFullPro(pro);
+        return userMapper.toUserFullRes(pro);
     }
 }

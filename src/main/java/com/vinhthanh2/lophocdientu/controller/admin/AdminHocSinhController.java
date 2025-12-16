@@ -3,8 +3,8 @@ package com.vinhthanh2.lophocdientu.controller.admin;
 import com.vinhthanh2.lophocdientu.config.SecurityApiResponses;
 import com.vinhthanh2.lophocdientu.dto.req.UpdatePassAdminReq;
 import com.vinhthanh2.lophocdientu.dto.req.UpdateStudentReq;
+import com.vinhthanh2.lophocdientu.dto.res.HocSinhRes;
 import com.vinhthanh2.lophocdientu.dto.res.PageResponse;
-import com.vinhthanh2.lophocdientu.dto.res.StudentRes;
 import com.vinhthanh2.lophocdientu.service.AuthService;
 import com.vinhthanh2.lophocdientu.service.HocSinhService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,7 +45,7 @@ public class AdminHocSinhController {
     })
     @SecurityApiResponses
     @GetMapping("/lop/{lopId}")
-    public ResponseEntity<PageResponse<StudentRes>> layDsHocSinhTheoLop(
+    public ResponseEntity<PageResponse<HocSinhRes>> layDsHocSinhTheoLop(
             @PathVariable Long lopId,
             @RequestParam(required = false, defaultValue = "") String search,
             @RequestParam(defaultValue = "1") int page,
@@ -82,7 +82,7 @@ public class AdminHocSinhController {
     })
     @SecurityApiResponses
     @PutMapping("/{id}")
-    public ResponseEntity<StudentRes> suaHocSinh(
+    public ResponseEntity<HocSinhRes> suaHocSinh(
             @PathVariable Long id,
             @RequestBody UpdateStudentReq updateStudentReq) {
 

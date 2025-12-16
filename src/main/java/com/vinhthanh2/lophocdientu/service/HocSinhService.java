@@ -2,9 +2,9 @@ package com.vinhthanh2.lophocdientu.service;
 
 import com.vinhthanh2.lophocdientu.dto.req.StudentRegisterReq;
 import com.vinhthanh2.lophocdientu.dto.req.UpdateStudentReq;
+import com.vinhthanh2.lophocdientu.dto.res.HocSinhRes;
 import com.vinhthanh2.lophocdientu.dto.res.PageResponse;
-import com.vinhthanh2.lophocdientu.dto.res.StudentRes;
-import com.vinhthanh2.lophocdientu.entity.User;
+import com.vinhthanh2.lophocdientu.dto.res.UserFullRes;
 import com.vinhthanh2.lophocdientu.mapper.HocSinhMapper;
 import com.vinhthanh2.lophocdientu.repository.HocSinhRepo;
 import com.vinhthanh2.lophocdientu.repository.UserRepo;
@@ -14,8 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -26,18 +28,17 @@ public class HocSinhService {
     private final UserRepo userRepo;
     private final HocSinhMapper hocSinhMapper;
 
-    public PageResponse<StudentRes> layHocSinhTheoLop(Long lopId, String search, int page, int size) {
-        List<StudentRes> teacherResList = hocSinhRepo
-                .layHocSinhTheoLop(lopId, search, page, size)
+    public PageResponse<HocSinhRes> layHocSinhTheoLop(Long lopId, String search, int page, int size) {
+        List<HocSinhRes> teacherResList = hocSinhRepo
+                .layTatCaHocSinh(lopId, search, page, size)
                 .stream()
-                .map(hocSinhMapper::toStudentDto)
                 .toList();
 
         long totalElements = hocSinhRepo.demHocSinhTheoLop(lopId, search);
 
         int totalPages = (int) Math.ceil((double) totalElements / size);
 
-        return PageResponse.<StudentRes>builder()
+        return PageResponse.<HocSinhRes>builder()
                 .data(teacherResList)
                 .page(page)
                 .size(size)
@@ -46,20 +47,16 @@ public class HocSinhService {
                 .build();
     }
 
-    public StudentRes layHocSinhTheoId(Long id) {
-        return hocSinhMapper.toStudentDto(hocSinhRepo.layHocSinhTheoId(id));
-    }
-
-    public StudentRes dangKyHocSinh(StudentRegisterReq req) {
+    public HocSinhRes taoHocSinh(StudentRegisterReq req) {
         req.setPassword(passwordEncoder.encode(req.getPassword()));
-        return hocSinhMapper.toStudentDto(hocSinhRepo.taoHocSinh(req));
+        return (hocSinhRepo.taoHocSinh(req));
     }
 
-    public StudentRes suaHocSinh(Long id, UpdateStudentReq req) {
-        return hocSinhMapper.toStudentDto(hocSinhRepo.suaHocSinh(req));
+    public HocSinhRes suaHocSinh(Long id, UpdateStudentReq req) {
+        return (hocSinhRepo.suaHocSinh(id, req));
     }
 
-    public StudentRes suaThongTinCaNhan(UpdateStudentReq updateStudentReq) {
+    public HocSinhRes suaThongTinCaNhan(UpdateStudentReq updateStudentReq) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated() ||
@@ -67,7 +64,7 @@ public class HocSinhService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
         }
 
-        User user = userRepo.findByUsername(auth.getName())
+        UserFullRes user = userRepo.findByUsername(auth.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
 
@@ -79,4 +76,7 @@ public class HocSinhService {
     }
 
 
+    public void importHocSinh(Long id, MultipartFile file) throws IOException {
+        hocSinhRepo.importHocSinh(id, file);
+    }
 }

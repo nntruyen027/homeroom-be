@@ -1,7 +1,7 @@
 package com.vinhthanh2.lophocdientu.repository;
 
+import com.vinhthanh2.lophocdientu.dto.res.PermissionRes;
 import com.vinhthanh2.lophocdientu.dto.sql.PermissionPro;
-import com.vinhthanh2.lophocdientu.entity.Permission;
 import com.vinhthanh2.lophocdientu.mapper.PermissionMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -34,7 +34,7 @@ public class PermissionRepo {
     }
 
     @Transactional
-    public Permission taoPermission(String code) {
+    public PermissionRes taoPermission(String code) {
         String sql = """
                 SELECT * FROM auth.fn_tao_permission(:p_code);
                 """;
@@ -43,7 +43,7 @@ public class PermissionRepo {
                 .setParameter("p_code", code)
                 .getSingleResult();
 
-        return permissionMapper.fromPro(pro);
+        return permissionMapper.toDto(pro);
     }
 
     public Boolean coPermission(String code) {
@@ -59,7 +59,7 @@ public class PermissionRepo {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Permission> layTatCaQuyen(String search, int page, int size) {
+    public List<PermissionRes> layTatCaQuyen(String search, int page, int size) {
         int offset = (page - 1) * size;
 
         String sql = """
@@ -76,7 +76,7 @@ public class PermissionRepo {
                 .setParameter("p_limit", size)
                 .getResultList();
 
-        return pros.stream().map(permissionMapper::fromPro).toList();
+        return pros.stream().map(permissionMapper::toDto).toList();
     }
 
     public Long demTatCaQuyen(String search) {

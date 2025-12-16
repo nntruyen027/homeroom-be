@@ -18,7 +18,7 @@ public class VaiTroService {
 
     public PageResponse<RoleRes> layTatCaVaiTro(String search, int page, int size) {
         List<RoleRes> data = roleRepo.layTatCaVaiTro(search, page, size)
-                .stream().map(roleMapper::toDto).toList();
+                .stream().toList();
 
         long totalElements = roleRepo.demTatCaVaiTro(search);
         int totalPages = (int) Math.ceil((double) totalElements / size);
@@ -33,15 +33,15 @@ public class VaiTroService {
     }
 
     public RoleRes phanQuyenChoVaiTro(Long id, List<String> permissions) {
-        return roleMapper.toDto(roleRepo.phanQuyenChoVaiTro(id, permissions));
+        return (roleRepo.phanQuyenChoVaiTro(id, permissions));
     }
 
     public RoleRes taoVaiTro(RoleReq roleReq) {
-        return roleMapper.toDto(roleRepo.taoVaiTro(roleReq));
+        return (roleRepo.taoVaiTro(roleReq));
     }
 
     public RoleRes suaVaiTro(Long id, RoleReq roleReq) {
-        return roleMapper.toDto(roleRepo.suaVaiTro(id, roleReq));
+        return (roleRepo.suaVaiTro(id, roleReq));
     }
 
     public void xoaVaiTro(Long id) {

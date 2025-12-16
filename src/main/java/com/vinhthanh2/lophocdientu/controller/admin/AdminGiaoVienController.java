@@ -3,7 +3,6 @@ package com.vinhthanh2.lophocdientu.controller.admin;
 import com.vinhthanh2.lophocdientu.config.SecurityApiResponses;
 import com.vinhthanh2.lophocdientu.dto.req.UpdatePassAdminReq;
 import com.vinhthanh2.lophocdientu.dto.req.UpdateTeacherReq;
-import com.vinhthanh2.lophocdientu.dto.res.LopRes;
 import com.vinhthanh2.lophocdientu.dto.res.PageResponse;
 import com.vinhthanh2.lophocdientu.dto.res.TeacherRes;
 import com.vinhthanh2.lophocdientu.service.AuthService;
@@ -46,35 +45,7 @@ public class AdminGiaoVienController {
         return ResponseEntity.ok(giaoVienService.layDsGiaoVien(search, page, size));
     }
 
-    // ------------------------------------------
-    // 2. Lấy danh sách lớp theo giáo viên
-    // ------------------------------------------
-    @Operation(summary = "Lấy danh sách lớp thuộc giáo viên")
-    @SecurityApiResponses
-    @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
-    @GetMapping("/{id}/lop")
-    @PreAuthorize("hasAuthority('CLASS_MANAGE')")
-    public ResponseEntity<PageResponse<LopRes>> layDsLopThuocGiaoVien(
-            @PathVariable Long id,
-            @RequestParam(defaultValue = "") String search,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        return ResponseEntity.ok(lopService.layDsLopTheoGv(id, search, page, size));
-    }
-
-    // ------------------------------------------
-    // 3. Lấy giáo viên theo ID
-    // ------------------------------------------
-    @PreAuthorize("hasAuthority('TEACHER_MANAGE')")
-    @Operation(summary = "Lấy giáo viên theo ID")
-    @SecurityApiResponses
-    @ApiResponse(responseCode = "200", description = "Lấy thành công")
-    @GetMapping("/{id}")
-    public ResponseEntity<TeacherRes> layGiaoVienTheoId(@PathVariable Long id) {
-        return ResponseEntity.ok(giaoVienService.layGiaoVienTheoId(id));
-    }
-
+    
     // ------------------------------------------
     // 4. Sửa giáo viên theo ID
     // ------------------------------------------

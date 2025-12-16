@@ -22,7 +22,7 @@ public class XaService {
         List<XaRes> xaList = xaRepo
                 .layTatCaXa(search, tinhId, page, size)
                 .stream()
-                .map(xaMapper::toDto)
+
                 .toList();
 
         long totalElements = xaRepo.demTatCaXa(search, tinhId);
@@ -39,11 +39,11 @@ public class XaService {
     }
 
     public XaRes taoXa(XaReq xaReq) {
-        return xaMapper.toDto(xaRepo.taoXa(xaReq));
+        return (xaRepo.taoXa(xaReq));
     }
 
     public XaRes suaXa(Long id, XaReq xaReq) {
-        return xaMapper.toDto(xaRepo.suaXa(id, xaReq));
+        return (xaRepo.suaXa(id, xaReq));
     }
 
     public void xoaXa(Long id) {

@@ -3,8 +3,8 @@ package com.vinhthanh2.lophocdientu.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vinhthanh2.lophocdientu.dto.req.LopReq;
+import com.vinhthanh2.lophocdientu.dto.res.LopRes;
 import com.vinhthanh2.lophocdientu.dto.sql.LopPro;
-import com.vinhthanh2.lophocdientu.entity.Lop;
 import com.vinhthanh2.lophocdientu.mapper.LopMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -23,7 +23,7 @@ public class LopRepo {
     final private ObjectMapper objectMapper;
 
     @SuppressWarnings("unchecked")
-    public List<Lop> layLopTheoTruong(Long schoolId, String search, int page, int size) {
+    public List<LopRes> layLopTheoTruong(Long schoolId, String search, int page, int size) {
         int offset = (page - 1) * size;
 
         String sql = """
@@ -42,7 +42,48 @@ public class LopRepo {
                 .setParameter("p_limit", size)
                 .getResultList();
 
-        return lopPros.stream().map(lopMapper::fromPro).toList();
+        return lopPros.stream().map(lopMapper::toDto).toList();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<LopRes> layLopTheoGiaoVien(Long giaoVienId, String search, int page, int size) {
+        int offset = (page - 1) * size;
+
+        String sql = """
+                select * from school.fn_lay_tat_ca_lop_thuoc_giao_vien(
+                    :p_gv_id,
+                    :p_search,
+                    :p_offset,
+                    :p_limit
+                )
+                """;
+
+        List<LopPro> lopPros = entityManager.createNativeQuery(sql, LopPro.class)
+                .setParameter("p_gv_id", giaoVienId)
+                .setParameter("p_search", search)
+                .setParameter("p_offset", offset)
+                .setParameter("p_limit", size)
+                .getResultList();
+
+        return lopPros.stream().map(lopMapper::toDto).toList();
+    }
+
+    public Long demTatCaLopThuocGiaoVien(Long giaoVienId, String search) {
+        String sql = """
+                    select school.fn_dem_tat_ca_lop_thuoc_giao_vien(
+                        :p_gv_id,
+                        :p_search
+                    )
+                """;
+        Object result = entityManager.createNativeQuery(sql)
+                .setParameter("p_gv_id", giaoVienId)
+                .setParameter("p_search", search)
+                .getSingleResult();
+
+        if (result == null) return 0L;
+        if (result instanceof Number num) return num.longValue();
+
+        return Long.parseLong(result.toString());
     }
 
     public Long demTatCaLopThuocTruong(Long truongId, String search) {
@@ -63,49 +104,9 @@ public class LopRepo {
         return Long.parseLong(result.toString());
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Lop> layTatCaLopThuocGiaoVien(Long giaoVienId, String search, int page, int size) {
-        int offset = (page - 1) * size;
-        String sql = """
-                    select * from school.fn_lay_tat_ca_lop_thuoc_giao_vien(
-                        :p_giao_vien_id,
-                        :p_search,
-                        :p_offset,
-                        :p_size
-                    )
-                """;
-        List<LopPro> lopPros = entityManager.createNativeQuery(sql, LopPro.class)
-                .setParameter("p_giao_vien_id", giaoVienId)
-                .setParameter("p_search", search)
-                .setParameter("p_offset", offset)
-                .setParameter("p_size", size)
-                .getResultList();
-
-        return lopPros.stream().map(lopMapper::fromPro).toList();
-    }
-
-    public Long demTatCaLopThuocGiaoVien(Long giaoVienId, String search) {
-        String sql = """
-                    select school.fn_dem_tat_ca_lop_thuoc_giao_vien(
-                        :p_giao_vien_id,
-                        :p_search
-                    )
-                """;
-
-        Object result = entityManager.createNativeQuery(sql)
-                .setParameter("p_giao_vien_id", giaoVienId)
-                .setParameter("p_search", search)
-                .getSingleResult();
-
-        if (result == null) return 0L;
-
-        if (result instanceof Number num) return num.longValue();
-
-        return Long.parseLong(result.toString());
-    }
 
     @Transactional
-    public Lop taoLop(LopReq lopReq) {
+    public LopRes taoLop(LopReq lopReq) {
         String sql = """
                     select school.fn_tao_lop(
                         :p_ten,
@@ -127,14 +128,14 @@ public class LopRepo {
             LopPro lopPro = objectMapper.readValue(json, LopPro.class);
 
 
-            return lopMapper.fromPro(lopPro);
+            return lopMapper.toDto(lopPro);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Lỗi parse JSON", e);
         }
     }
 
     @Transactional
-    public Lop suaLop(Long id, LopReq lopReq, Long nguoiSuaId) {
+    public LopRes suaLop(Long id, LopReq lopReq, Long nguoiSuaId) {
         String sql = """
                     select school.fn_sua_lop(
                         :p_id,
@@ -157,7 +158,7 @@ public class LopRepo {
         try {
             LopPro lopPro = objectMapper.readValue(json, LopPro.class);
 
-            return lopMapper.fromPro(lopPro);
+            return lopMapper.toDto(lopPro);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Lỗi parse JSON", e);
         }
@@ -177,4 +178,6 @@ public class LopRepo {
         if (result instanceof Boolean b) return b;
         return Boolean.parseBoolean(result.toString());
     }
+
+
 }

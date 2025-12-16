@@ -17,7 +17,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/giao-vien")
@@ -33,21 +36,6 @@ public class GiaoVienController {
     private final AuthService authService;
     private final LopService lopService;
 
-    // ============================
-    // 1. Lấy giáo viên theo ID
-    // ============================
-    @Operation(
-            summary = "Lấy thông tin giáo viên theo ID",
-            description = "API trả về thông tin chi tiết giáo viên theo ID."
-    )
-    @SecurityApiResponses
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lấy thành công"),
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<?> layGiaoVien(@PathVariable Long id) {
-        return ResponseEntity.ok(giaoVienService.layGiaoVienTheoId(id));
-    }
 
     // ============================
     // 2. Sửa thông tin cá nhân

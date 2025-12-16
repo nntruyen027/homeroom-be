@@ -51,6 +51,6 @@ BEGIN
         END LOOP;
 
     -- Trả về thông tin user
-    RETURN QUERY SELECT * FROM auth.v_users_full WHERE out_id = p_user_id LIMIT 1;
+    RETURN QUERY SELECT * FROM auth.v_users_full WHERE id = p_user_id LIMIT 1;
 END;
 $$;

@@ -1,8 +1,8 @@
 package com.vinhthanh2.lophocdientu.repository;
 
 import com.vinhthanh2.lophocdientu.dto.req.RoleReq;
+import com.vinhthanh2.lophocdientu.dto.res.RoleRes;
 import com.vinhthanh2.lophocdientu.dto.sql.RolePro;
-import com.vinhthanh2.lophocdientu.entity.Role;
 import com.vinhthanh2.lophocdientu.mapper.RoleMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,7 +20,7 @@ public class RoleRepo {
     private final RoleMapper roleMapper;
 
     @SuppressWarnings("unchecked")
-    public List<Role> layTatCaVaiTro(String search, int page, int size) {
+    public List<RoleRes> layTatCaVaiTro(String search, int page, int size) {
         int offset = (page - 1) * size;
 
         String sql = """
@@ -55,7 +55,7 @@ public class RoleRepo {
         return Long.parseLong(result.toString());
     }
 
-    public Role taoVaiTro(RoleReq roleReq) {
+    public RoleRes taoVaiTro(RoleReq roleReq) {
         String sql = """
                 SELECT * FROM auth.fn_tao_vai_tro(:p_name, :p_code);
                 """;
@@ -68,7 +68,7 @@ public class RoleRepo {
         return roleMapper.fromPro(pro);
     }
 
-    public Role suaVaiTro(Long id, RoleReq roleReq) {
+    public RoleRes suaVaiTro(Long id, RoleReq roleReq) {
         String sql = """
                 SELECT * FROM auth.fn_sua_vai_tro(:p_id, :p_name, :p_code);
                 """;
@@ -82,7 +82,7 @@ public class RoleRepo {
         return roleMapper.fromPro(pro);
     }
 
-    public Role phanQuyenChoVaiTro(Long id, List<String> permissions) {
+    public RoleRes phanQuyenChoVaiTro(Long id, List<String> permissions) {
         String sql = """
                 SELECT * FROM auth.fn_phan_quyen_cho_vai_tro(:p_id, :p_permissions);
                 """;
@@ -129,7 +129,7 @@ public class RoleRepo {
         return result != null && (Boolean) result;
     }
 
-    public Role timVaiTroTheoMa(String code) {
+    public RoleRes timVaiTroTheoMa(String code) {
         String sql = """
                 SELECT * FROM  auth.fn_lay_vai_tro_theo_ma(:p_code);
                 """;

@@ -1,8 +1,8 @@
 package com.vinhthanh2.lophocdientu.repository;
 
 import com.vinhthanh2.lophocdientu.dto.req.TruongReq;
+import com.vinhthanh2.lophocdientu.dto.res.TruongRes;
 import com.vinhthanh2.lophocdientu.dto.sql.TruongPro;
-import com.vinhthanh2.lophocdientu.entity.Truong;
 import com.vinhthanh2.lophocdientu.mapper.TruongMapper;
 import com.vinhthanh2.lophocdientu.util.ExcelBatchImporter;
 import com.vinhthanh2.lophocdientu.util.ExcelUtils;
@@ -24,7 +24,7 @@ public class TruongRepo {
     private final TruongMapper truongMapper;
 
     @SuppressWarnings("unchecked")
-    public List<Truong> layTatCaTruong(String search, int page, int size) {
+    public List<TruongRes> layTatCaTruong(String search, int page, int size) {
         int offset = (page - 1) * size;
 
         String sql = """
@@ -41,7 +41,7 @@ public class TruongRepo {
                 .setParameter("p_limit", size)
                 .getResultList();
 
-        return truongPros.stream().map(truongMapper::fromTruongPro).toList();
+        return truongPros.stream().map(truongMapper::toDto).toList();
     }
 
     public Long demTatCaTruong(String search) {
@@ -60,7 +60,7 @@ public class TruongRepo {
     }
 
     @Transactional
-    public Truong taoTruong(TruongReq truong) {
+    public TruongRes taoTruong(TruongReq truong) {
         String sql = """
                     SELECT * from school.fn_tao_truong(
                         :p_ten,
@@ -71,7 +71,7 @@ public class TruongRepo {
                     )
                 """;
 
-        return truongMapper.fromTruongPro((TruongPro) entityManager.createNativeQuery(sql, TruongPro.class)
+        return truongMapper.toDto((TruongPro) entityManager.createNativeQuery(sql, TruongPro.class)
                 .setParameter("p_ten", truong.getTen())
                 .setParameter("p_dia_chi_chi_tiet", truong.getDiaChiChiTiet())
                 .setParameter("p_xa_id", truong.getXaId())
@@ -82,7 +82,7 @@ public class TruongRepo {
     }
 
     @Transactional
-    public Truong suaTruong(Long id, TruongReq truong) {
+    public TruongRes suaTruong(Long id, TruongReq truong) {
         String sql = """
                     SELECT * from school.fn_sua_truong(
                         :p_id,
@@ -94,7 +94,7 @@ public class TruongRepo {
                     )
                 """;
 
-        return truongMapper.fromTruongPro((TruongPro) entityManager.createNativeQuery(sql, TruongPro.class)
+        return truongMapper.toDto((TruongPro) entityManager.createNativeQuery(sql, TruongPro.class)
                 .setParameter("p_id", id)
                 .setParameter("p_ten", truong.getTen())
                 .setParameter("p_dia_chi_chi_tiet", truong.getDiaChiChiTiet())

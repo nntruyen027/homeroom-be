@@ -22,7 +22,6 @@ public class TruongService {
         List<TruongRes> truongList = truongRepo
                 .layTatCaTruong(search, page, size)
                 .stream()
-                .map(truongMapper::toDto)
                 .toList();
 
         long totalElements = truongRepo.demTatCaTruong(search);
@@ -39,11 +38,11 @@ public class TruongService {
     }
 
     public TruongRes taoTruong(TruongReq truongReq) {
-        return truongMapper.toDto(truongRepo.taoTruong(truongReq));
+        return (truongRepo.taoTruong(truongReq));
     }
 
     public TruongRes suaTruong(Long id, TruongReq truongReq) {
-        return truongMapper.toDto(truongRepo.suaTruong(id, truongReq));
+        return (truongRepo.suaTruong(id, truongReq));
     }
 
     public void xoaTruong(Long id) {

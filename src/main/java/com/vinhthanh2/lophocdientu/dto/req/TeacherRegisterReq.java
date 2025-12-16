@@ -10,8 +10,6 @@ public class TeacherRegisterReq {
 
     private String repeatPass;
 
-    private String avatar;
-
     private String hoTen;
 
     private String ngaySinh;

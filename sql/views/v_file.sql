@@ -1,0 +1,5 @@
+DROP VIEW IF EXISTS v_file CASCADE;
+
+CREATE VIEW v_file AS
+SELECT *
+FROM files;

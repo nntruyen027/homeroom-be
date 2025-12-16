@@ -18,7 +18,7 @@ public class QuyenService {
     public PageResponse<PermissionRes> layTatCaQuyen(String search, int page, int size) {
 
         List<PermissionRes> data = permissionRepo.layTatCaQuyen(search, page, size)
-                .stream().map(permissionMapper::toDto).toList();
+                .stream().toList();
 
         long totalElements = permissionRepo.demTatCaQuyen(search);
 

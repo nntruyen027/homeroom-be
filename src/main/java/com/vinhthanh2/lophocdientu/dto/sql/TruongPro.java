@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class TruongPro {
-    private Long outId;
+    private Long id;
 
     private String ten;
 

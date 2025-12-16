@@ -3,7 +3,7 @@ DROP FUNCTION IF EXISTS auth.fn_lay_quan_tri_theo_username;
 CREATE OR REPLACE FUNCTION auth.fn_lay_quan_tri_theo_username(
     p_username VARCHAR
 )
-    RETURNS SETOF auth.v_users_admin
+    RETURNS SETOF auth.v_users_full
 AS
 $$
 BEGIN
@@ -13,7 +13,7 @@ BEGIN
 
     RETURN QUERY
         SELECT *
-        FROM auth.v_users_admin u
+        FROM auth.v_users_full u
         WHERE u.username = p_username
         LIMIT 1;
 END;

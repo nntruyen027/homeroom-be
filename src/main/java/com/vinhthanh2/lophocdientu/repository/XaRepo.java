@@ -1,8 +1,8 @@
 package com.vinhthanh2.lophocdientu.repository;
 
 import com.vinhthanh2.lophocdientu.dto.req.XaReq;
+import com.vinhthanh2.lophocdientu.dto.res.XaRes;
 import com.vinhthanh2.lophocdientu.dto.sql.XaPro;
-import com.vinhthanh2.lophocdientu.entity.Xa;
 import com.vinhthanh2.lophocdientu.mapper.XaMapper;
 import com.vinhthanh2.lophocdientu.util.ExcelBatchImporter;
 import com.vinhthanh2.lophocdientu.util.ExcelUtils;
@@ -24,7 +24,7 @@ public class XaRepo {
     private final XaMapper xaMapper;
 
     @SuppressWarnings("unchecked")
-    public List<Xa> layTatCaXa(String search, Long tinhId, int page, int size) {
+    public List<XaRes> layTatCaXa(String search, Long tinhId, int page, int size) {
         int offset = (page - 1) * size;
 
         String sql = """
@@ -44,7 +44,7 @@ public class XaRepo {
                 .setParameter("p_limit", size)
                 .getResultList();
 
-        return xaPros.stream().map(xaMapper::fromPro).toList();
+        return xaPros.stream().map(xaMapper::toDto).toList();
     }
 
     public Long demTatCaXa(String search, Long tinhId) {
@@ -64,7 +64,7 @@ public class XaRepo {
     }
 
     @Transactional
-    public Xa taoXa(XaReq xa) {
+    public XaRes taoXa(XaReq xa) {
         String sql = """
                     SELECT * from dm_chung.fn_tao_xa(
                         :p_ten,
@@ -73,7 +73,7 @@ public class XaRepo {
                     )
                 """;
 
-        return xaMapper.fromPro((XaPro) entityManager.createNativeQuery(sql, XaPro.class)
+        return xaMapper.toDto((XaPro) entityManager.createNativeQuery(sql, XaPro.class)
                 .setParameter("p_ten", xa.getTen())
                 .setParameter("p_ghi_chu", xa.getGhiChu())
                 .setParameter("p_tinh_id", xa.getTinhId())
@@ -82,7 +82,7 @@ public class XaRepo {
     }
 
     @Transactional
-    public Xa suaXa(Long id, XaReq xa) {
+    public XaRes suaXa(Long id, XaReq xa) {
         String sql = """
                     SELECT * from dm_chung.fn_sua_xa(
                         :p_id,
@@ -92,7 +92,7 @@ public class XaRepo {
                     )
                 """;
 
-        return xaMapper.fromPro((XaPro) entityManager.createNativeQuery(sql, XaPro.class)
+        return xaMapper.toDto((XaPro) entityManager.createNativeQuery(sql, XaPro.class)
                 .setParameter("p_id", id)
                 .setParameter("p_ten", xa.getTen())
                 .setParameter("p_ghi_chu", xa.getGhiChu())
@@ -104,11 +104,11 @@ public class XaRepo {
     @Transactional
     public boolean xoaXa(Long id) {
         String sql = """
-                    SELECT dm_chung.fn_xoa_xa(:p_id::bigint)
+                    SELECT dm_chung.fn_xoa_xa(:p_id)
                 """;
 
         Object result = entityManager.createNativeQuery(sql)
-                .setParameter("p_id::bigint", id)
+                .setParameter("p_id", id)
                 .getSingleResult();
 
         if (result instanceof Boolean b) return b;

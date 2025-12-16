@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS dm_chung.fn_lay_tat_ca_phu_huynh;
+DROP FUNCTION IF EXISTS auth.fn_lay_tat_ca_phu_huynh;
 
-CREATE OR REPLACE FUNCTION dm_chung.fn_lay_tat_ca_phu_huynh(
+CREATE OR REPLACE FUNCTION auth.fn_lay_tat_ca_phu_huynh(
     p_search VARCHAR(500),
     p_offset INT DEFAULT 0,
     p_limit INT DEFAULT 10

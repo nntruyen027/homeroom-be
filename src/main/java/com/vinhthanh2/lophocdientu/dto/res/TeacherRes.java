@@ -4,21 +4,14 @@ import lombok.Data;
 
 @Data
 public class TeacherRes {
-    private Long id;
-
+    private Long userId;
     private String username;
-
-    private String avatar;
-
     private String hoTen;
-
-    private String ngaySinh;
-    private Boolean laNam;
-    private String role;
-    private XaRes xa;
-    private String diaChiChiTiet;
-
-    // Dành cho giáo viên
+    private String avatar;
     private String boMon;
     private String chucVu;
+    private String ngaySinh;
+    private Boolean laNam;
+    private XaRes xa;
+    private String diaChiChiTiet;
 }

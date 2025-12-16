@@ -100,7 +100,7 @@ BEGIN
     RETURN QUERY
         SELECT *
         FROM auth.v_users_full
-        WHERE out_id = v_user_id;
+        WHERE id = v_user_id;
 
 END;
 $$;

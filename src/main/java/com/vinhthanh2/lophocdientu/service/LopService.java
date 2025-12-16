@@ -3,7 +3,7 @@ package com.vinhthanh2.lophocdientu.service;
 import com.vinhthanh2.lophocdientu.dto.req.LopReq;
 import com.vinhthanh2.lophocdientu.dto.res.LopRes;
 import com.vinhthanh2.lophocdientu.dto.res.PageResponse;
-import com.vinhthanh2.lophocdientu.entity.User;
+import com.vinhthanh2.lophocdientu.dto.res.UserFullRes;
 import com.vinhthanh2.lophocdientu.mapper.LopMapper;
 import com.vinhthanh2.lophocdientu.repository.LopRepo;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,6 @@ public class LopService {
         List<LopRes> truongList = lopRepo
                 .layLopTheoTruong(truongId, search, page, size)
                 .stream()
-                .map(lopMapper::toDto)
                 .toList();
 
         long totalElements = lopRepo.demTatCaLopThuocTruong(truongId, search);
@@ -38,11 +37,11 @@ public class LopService {
                 .build();
     }
 
+
     public PageResponse<LopRes> layDsLopTheoGv(Long giaoVienId, String search, int page, int size) {
         List<LopRes> truongList = lopRepo
-                .layTatCaLopThuocGiaoVien(giaoVienId, search, page, size)
+                .layLopTheoGiaoVien(giaoVienId, search, page, size)
                 .stream()
-                .map(lopMapper::toDto)
                 .toList();
 
         long totalElements = lopRepo.demTatCaLopThuocGiaoVien(giaoVienId, search);
@@ -59,16 +58,16 @@ public class LopService {
     }
 
     public LopRes taoLop(LopReq lopReq) {
-        return lopMapper.toDto(lopRepo.taoLop(lopReq));
+        return (lopRepo.taoLop(lopReq));
     }
 
     public LopRes suaLop(Long id, LopReq lopReq) {
-        User user = authService.getCurrentUser();
-        return lopMapper.toDto(lopRepo.suaLop(id, lopReq, user.getId()));
+        UserFullRes user = authService.getCurrentUser();
+        return (lopRepo.suaLop(id, lopReq, user.getId()));
     }
 
     public void xoaLop(Long id) {
-        User user = authService.getCurrentUser();
+        UserFullRes user = authService.getCurrentUser();
         lopRepo.xoaLop(id, user.getId());
     }
 }

@@ -22,7 +22,6 @@ public class TinhService {
         List<TinhRes> tinhList = tinhRepo
                 .layTatCaTinh(search, page, size)
                 .stream()
-                .map(tinhMapper::toDto)
                 .toList();
 
         long totalElements = tinhRepo.demTatCaTinh(search);
@@ -39,11 +38,11 @@ public class TinhService {
     }
 
     public TinhRes taoTinh(TinhReq tinhReq) {
-        return tinhMapper.toDto(tinhRepo.taoTinh(tinhReq));
+        return (tinhRepo.taoTinh(tinhReq));
     }
 
     public TinhRes suaTinh(Long id, TinhReq tinhReq) {
-        return tinhMapper.toDto(tinhRepo.suaTinh(id, tinhReq));
+        return (tinhRepo.suaTinh(id, tinhReq));
     }
 
     public void xoaTinh(Long id) {

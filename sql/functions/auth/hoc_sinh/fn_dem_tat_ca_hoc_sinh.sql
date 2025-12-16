@@ -1,7 +1,8 @@
 DROP FUNCTION IF EXISTS auth.fn_dem_tat_ca_hoc_sinh;
 
 CREATE OR REPLACE FUNCTION auth.fn_dem_tat_ca_hoc_sinh(
-    p_search VARCHAR(500)
+    p_lop_id BIGINT DEFAULT NULL,
+    p_search VARCHAR(500) DEFAULT NULL
 )
     RETURNS BIGINT
     LANGUAGE plpgsql
@@ -14,13 +15,18 @@ BEGIN
     INTO total
     FROM auth.hoc_sinh hs
              JOIN auth.users u ON u.id = hs.user_id
-    WHERE p_search IS NULL
-       OR p_search = ''
-       OR unaccent(lower(u.ho_ten)) LIKE '%' || unaccent(lower(p_search)) || '%';
+    WHERE
+      -- lọc theo lớp nếu có truyền
+        (p_lop_id IS NULL OR hs.lop_id = p_lop_id)
+
+      -- tìm kiếm theo họ tên
+      AND (
+        p_search IS NULL
+            OR p_search = ''
+            OR public.unaccent(lower(u.ho_ten))
+            LIKE '%' || public.unaccent(lower(p_search)) || '%'
+        );
 
     RETURN total;
 END;
 $$;
-
-
-

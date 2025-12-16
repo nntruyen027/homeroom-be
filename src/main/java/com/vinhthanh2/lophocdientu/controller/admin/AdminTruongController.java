@@ -4,9 +4,8 @@ import com.vinhthanh2.lophocdientu.config.SecurityApiResponses;
 import com.vinhthanh2.lophocdientu.dto.req.TruongReq;
 import com.vinhthanh2.lophocdientu.dto.res.LopRes;
 import com.vinhthanh2.lophocdientu.dto.res.PageResponse;
-import com.vinhthanh2.lophocdientu.dto.res.TeacherRes;
 import com.vinhthanh2.lophocdientu.dto.res.TruongRes;
-import com.vinhthanh2.lophocdientu.entity.Xa;
+import com.vinhthanh2.lophocdientu.dto.res.XaRes;
 import com.vinhthanh2.lophocdientu.repository.XaRepo;
 import com.vinhthanh2.lophocdientu.service.GiaoVienService;
 import com.vinhthanh2.lophocdientu.service.LopService;
@@ -83,21 +82,6 @@ public class AdminTruongController {
         return ResponseEntity.ok(lopService.layDsLopTheoTruong(id, search, page, size));
     }
 
-    // ============================
-    // 3. Lấy DS giáo viên theo trường
-    // ============================
-    @Operation(summary = "Lấy danh sách giáo viên thuộc trường",
-            description = "API trả về danh sách giáo viên theo trường, có tìm kiếm + phân trang.")
-    @SecurityApiResponses
-    @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
-    @GetMapping("/{id}/giao-vien")
-    public ResponseEntity<PageResponse<TeacherRes>> layDsGiaoVienThuocTruong(
-            @PathVariable Long id,
-            @RequestParam(required = false, defaultValue = "") String search,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(giaoVienService.layGiaoVienTheoTruong(id, search, page, size));
-    }
 
     // ============================
     // 4. Tạo trường
@@ -150,7 +134,7 @@ public class AdminTruongController {
         InputStream inputStream = resource.getInputStream();
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
 
-        List<Xa> xas = xaRepo.layTatCaXa("", tinhId, 1, 100000);
+        List<XaRes> xas = xaRepo.layTatCaXa("", tinhId, 1, 100000);
 
         XSSFSheet sheetXa = workbook.getSheet("dm_xa");
         if (sheetXa == null) sheetXa = workbook.createSheet("dm_xa");
@@ -167,7 +151,7 @@ public class AdminTruongController {
         header.createCell(1).setCellValue("Tên xã");
 
         int rowIndex = 1;
-        for (Xa xa : xas) {
+        for (XaRes xa : xas) {
             Row row = sheetXa.createRow(rowIndex++);
             row.createCell(0).setCellValue(xa.getId());
             row.createCell(1).setCellValue(xa.getId() + " - " + xa.getTen());

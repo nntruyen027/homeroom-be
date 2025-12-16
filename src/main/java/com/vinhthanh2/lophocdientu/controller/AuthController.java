@@ -6,7 +6,7 @@ import com.vinhthanh2.lophocdientu.dto.req.UpdatePassReq;
 import com.vinhthanh2.lophocdientu.dto.res.LoginRes;
 import com.vinhthanh2.lophocdientu.dto.res.UserFullRes;
 import com.vinhthanh2.lophocdientu.exception.AppException;
-import com.vinhthanh2.lophocdientu.mapper.UserMapper;
+import com.vinhthanh2.lophocdientu.mapper.GiaoVienMapper;
 import com.vinhthanh2.lophocdientu.repository.UserRepo;
 import com.vinhthanh2.lophocdientu.service.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +39,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private AuthService authService;
     private final GiaoVienService giaoVienService;
-    private final UserMapper userMapper;
+    private final GiaoVienMapper giaoVienMapper;
     private final TinhService tinhService;
     private final XaService xaService;
 
@@ -66,7 +66,7 @@ public class AuthController {
             );
 
             String token = jwtService.generateToken(request.getUsername());
-            UserFullRes user = userMapper.toUserFullDto(userRepository.findByUsername(request.getUsername()).get());
+            UserFullRes user = (userRepository.findByUsername(request.getUsername()).get());
             return new LoginRes(token, user);
 
         } catch (BadCredentialsException ex) {

@@ -2,7 +2,7 @@ package com.vinhthanh2.lophocdientu.controller.admin;
 
 import com.vinhthanh2.lophocdientu.config.SecurityApiResponses;
 import com.vinhthanh2.lophocdientu.dto.req.XaReq;
-import com.vinhthanh2.lophocdientu.entity.Tinh;
+import com.vinhthanh2.lophocdientu.dto.res.TinhRes;
 import com.vinhthanh2.lophocdientu.repository.TinhRepo;
 import com.vinhthanh2.lophocdientu.service.XaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -128,7 +128,7 @@ public class AdminXaController {
         InputStream inputStream = resource.getInputStream();
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
 
-        List<Tinh> tinhs = tinhRepo.layTatCaTinh("", 1, 10000);
+        List<TinhRes> tinhs = tinhRepo.layTatCaTinh("", 1, 10000);
 
         XSSFSheet sheet = workbook.getSheet("DanhMucTinh");
         if (sheet == null) sheet = workbook.createSheet("DanhMucTinh");
@@ -145,7 +145,7 @@ public class AdminXaController {
         header.createCell(1).setCellValue("Tên tỉnh");
 
         int rowIndex = 1;
-        for (Tinh tinh : tinhs) {
+        for (TinhRes tinh : tinhs) {
             Row row = sheet.createRow(rowIndex++);
             row.createCell(0).setCellValue(tinh.getId());
             row.createCell(1).setCellValue(tinh.getId() + " - " + tinh.getTen());

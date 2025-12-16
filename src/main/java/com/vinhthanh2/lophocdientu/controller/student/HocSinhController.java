@@ -2,7 +2,7 @@ package com.vinhthanh2.lophocdientu.controller.student;
 
 import com.vinhthanh2.lophocdientu.config.SecurityApiResponses;
 import com.vinhthanh2.lophocdientu.dto.req.UpdateStudentReq;
-import com.vinhthanh2.lophocdientu.dto.res.StudentRes;
+import com.vinhthanh2.lophocdientu.dto.res.HocSinhRes;
 import com.vinhthanh2.lophocdientu.service.AuthService;
 import com.vinhthanh2.lophocdientu.service.HocSinhService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +44,7 @@ public class HocSinhController {
             @ApiResponse(responseCode = "400", description = "Dữ liệu không hợp lệ", content = @Content),
     })
     @PutMapping("")
-    public ResponseEntity<StudentRes> suaThongTinCaNhan(
+    public ResponseEntity<HocSinhRes> suaThongTinCaNhan(
             @RequestBody UpdateStudentReq updateStudentReq
     ) {
         return ResponseEntity.ok(hocSinhService.suaThongTinCaNhan(updateStudentReq));

@@ -2,10 +2,11 @@ package com.vinhthanh2.lophocdientu.service;
 
 import com.vinhthanh2.lophocdientu.dto.req.UpdatePassReq;
 import com.vinhthanh2.lophocdientu.dto.res.UserFullRes;
-import com.vinhthanh2.lophocdientu.entity.User;
+import com.vinhthanh2.lophocdientu.dto.sql.UserAuthPro;
 import com.vinhthanh2.lophocdientu.exception.AppException;
-import com.vinhthanh2.lophocdientu.mapper.UserMapper;
+import com.vinhthanh2.lophocdientu.mapper.GiaoVienMapper;
 import com.vinhthanh2.lophocdientu.repository.UserRepo;
+import com.vinhthanh2.lophocdientu.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -19,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
+    private final GiaoVienMapper giaoVienMapper;
 
     public UserFullRes getCurrentUserDto() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -29,12 +30,10 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Người dùng chưa được xác thực");
         }
 
-        User user = userRepo.findByUsername(auth.getName()).get();
-
-        return userMapper.toUserFullDto(user);
+        return userRepo.findByUsername(auth.getName()).get();
     }
 
-    public User getCurrentUser() {
+    public UserFullRes getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated() ||
@@ -54,7 +53,7 @@ public class AuthService {
             throw new AppException("USER_NOT_FOUND", "Không tìm thấy thông tin người dùng đăng nhập");
         }
 
-        User user = userRepo.findByUsername(username)
+        UserAuthPro user = userRepo.findAuthByUsername(username)
                 .orElseThrow(() -> new AppException("USER_NOT_FOUND", "Không tìm thấy người dùng"));
 
         if (updatePassReq.getOldPass() == null || updatePassReq.getOldPass().isBlank()) {
@@ -77,7 +76,7 @@ public class AuthService {
     }
 
     public void doiMatKhau(Long userId, UpdatePassReq updatePassReq) {
-        User user = userRepo.findById(userId);
+        UserAuthPro user = userRepo.findAuthById(userId);
 
         if (!passwordEncoder.matches(updatePassReq.getOldPass(), user.getPassword())) {
             throw new AppException("INVALID_PASSWORD", "Mật khẩu cũ không chính xác");
@@ -96,7 +95,7 @@ public class AuthService {
             throw new AppException("INVALID_PASSWORD", "Mật khẩu mới không được để trống");
         }
 
-        User user = userRepo.findById(userId);
+        UserAuthPro user = userRepo.findAuthById(userId);
 
         userRepo.doiMatKhau(user.getId(), passwordEncoder.encode(newPassword));
     }

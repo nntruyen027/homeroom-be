@@ -1,8 +1,8 @@
 package com.vinhthanh2.lophocdientu.repository;
 
 import com.vinhthanh2.lophocdientu.dto.req.TinhReq;
+import com.vinhthanh2.lophocdientu.dto.res.TinhRes;
 import com.vinhthanh2.lophocdientu.dto.sql.TinhPro;
-import com.vinhthanh2.lophocdientu.entity.Tinh;
 import com.vinhthanh2.lophocdientu.mapper.TinhMapper;
 import com.vinhthanh2.lophocdientu.util.ExcelBatchImporter;
 import com.vinhthanh2.lophocdientu.util.ExcelUtils;
@@ -24,7 +24,7 @@ public class TinhRepo {
     private final TinhMapper tinhMapper;
 
     @SuppressWarnings("unchecked")
-    public List<Tinh> layTatCaTinh(String search, int page, int size) {
+    public List<TinhRes> layTatCaTinh(String search, int page, int size) {
         int offset = (page - 1) * size;
 
         String sql = """
@@ -41,7 +41,7 @@ public class TinhRepo {
                 .setParameter("p_limit", size)
                 .getResultList();
 
-        return tinhPros.stream().map(tinhMapper::fromPro).toList();
+        return tinhPros.stream().map(tinhMapper::toDto).toList();
     }
 
     public Long demTatCaTinh(String search) {
@@ -60,7 +60,7 @@ public class TinhRepo {
     }
 
     @Transactional
-    public Tinh taoTinh(TinhReq tinh) {
+    public TinhRes taoTinh(TinhReq tinh) {
         String sql = """
                     SELECT * from dm_chung.fn_tao_tinh(
                         :p_ten,
@@ -68,7 +68,7 @@ public class TinhRepo {
                     )
                 """;
 
-        return tinhMapper.fromPro((TinhPro) entityManager.createNativeQuery(sql, TinhPro.class)
+        return tinhMapper.toDto((TinhPro) entityManager.createNativeQuery(sql, TinhPro.class)
                 .setParameter("p_ten", tinh.getTen())
                 .setParameter("p_ghi_chu", tinh.getGhiChu())
                 .getSingleResult()
@@ -76,7 +76,7 @@ public class TinhRepo {
     }
 
     @Transactional
-    public Tinh suaTinh(Long id, TinhReq tinh) {
+    public TinhRes suaTinh(Long id, TinhReq tinh) {
         String sql = """
                     SELECT * from dm_chung.fn_sua_tinh(
                         :p_id,
@@ -85,7 +85,7 @@ public class TinhRepo {
                     )
                 """;
 
-        return tinhMapper.fromPro((TinhPro) entityManager.createNativeQuery(sql, TinhPro.class)
+        return tinhMapper.toDto((TinhPro) entityManager.createNativeQuery(sql, TinhPro.class)
                 .setParameter("p_id", id)
                 .setParameter("p_ten", tinh.getTen())
                 .setParameter("p_ghi_chu", tinh.getGhiChu())

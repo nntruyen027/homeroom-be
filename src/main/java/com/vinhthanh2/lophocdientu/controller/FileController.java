@@ -1,12 +1,12 @@
 package com.vinhthanh2.lophocdientu.controller;
 
-import com.vinhthanh2.lophocdientu.dto.res.FileResponse;
+import com.vinhthanh2.lophocdientu.dto.res.FileRes;
+import com.vinhthanh2.lophocdientu.dto.res.PageResponse;
 import com.vinhthanh2.lophocdientu.service.FileService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,7 @@ public class FileController {
     // Upload file
     // -------------------------------
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<FileResponse> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<FileRes> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         return ResponseEntity.ok(fileService.upload(file));
     }
 
@@ -37,9 +37,11 @@ public class FileController {
     // Lấy danh sách file phân trang
     // -------------------------------
     @GetMapping
-    public ResponseEntity<Page<FileResponse>> getAllFiles(@RequestParam(defaultValue = "1") int page,
-                                                          @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(fileService.getAll(page - 1, size));
+    public ResponseEntity<PageResponse<FileRes>> getAllFiles(
+            @RequestParam(required = false, defaultValue = "") String search,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(fileService.getAll(search, page, size));
     }
 
     // -------------------------------
