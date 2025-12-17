@@ -38,13 +38,13 @@ public class LopService {
     }
 
 
-    public PageResponse<LopRes> layDsLopTheoGv(Long giaoVienId, String search, int page, int size) {
+    public PageResponse<LopRes> layDsLopTheoGv(Long giaoVienId, Long truongId, String search, int page, int size) {
         List<LopRes> truongList = lopRepo
-                .layLopTheoGiaoVien(giaoVienId, search, page, size)
+                .layLopTheoGiaoVien(giaoVienId, truongId, search, page, size)
                 .stream()
                 .toList();
 
-        long totalElements = lopRepo.demTatCaLopThuocGiaoVien(giaoVienId, search);
+        long totalElements = lopRepo.demTatCaLopThuocGiaoVien(giaoVienId, truongId, search);
 
         int totalPages = (int) Math.ceil((double) totalElements / size);
 

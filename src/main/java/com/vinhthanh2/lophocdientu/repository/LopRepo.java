@@ -45,12 +45,13 @@ public class LopRepo {
     }
 
     @SuppressWarnings("unchecked")
-    public List<LopRes> layLopTheoGiaoVien(Long giaoVienId, String search, int page, int size) {
+    public List<LopRes> layLopTheoGiaoVien(Long giaoVienId, Long truongId, String search, int page, int size) {
         int offset = (page - 1) * size;
 
         String sql = """
                 select * from school.fn_lay_tat_ca_lop_thuoc_giao_vien(
                     :p_gv_id,
+                    :p_truong_id,
                     :p_search,
                     :p_offset,
                     :p_limit
@@ -60,6 +61,7 @@ public class LopRepo {
         List<LopPro> lopPros = entityManager.createNativeQuery(sql, LopPro.class)
                 .setParameter("p_gv_id", giaoVienId)
                 .setParameter("p_search", search)
+                .setParameter("p_truong_id", truongId)
                 .setParameter("p_offset", offset)
                 .setParameter("p_limit", size)
                 .getResultList();
@@ -67,15 +69,17 @@ public class LopRepo {
         return lopPros.stream().map(lopMapper::toDto).toList();
     }
 
-    public Long demTatCaLopThuocGiaoVien(Long giaoVienId, String search) {
+    public Long demTatCaLopThuocGiaoVien(Long giaoVienId, Long truongId, String search) {
         String sql = """
                     select school.fn_dem_tat_ca_lop_thuoc_giao_vien(
                         :p_gv_id,
+                        :p_truong_id,
                         :p_search
                     )
                 """;
         Object result = entityManager.createNativeQuery(sql)
                 .setParameter("p_gv_id", giaoVienId)
+                .setParameter("p_truong_id", truongId)
                 .setParameter("p_search", search)
                 .getSingleResult();
 

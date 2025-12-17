@@ -38,10 +38,11 @@ public class LopGiaoVienController {
     @GetMapping
     public PageResponse<LopRes> layDsLop(
             @RequestParam(required = false, defaultValue = "") String search,
+            @RequestParam(required = false) Long truongId,
             @RequestParam(required = false, defaultValue = "1") int page,
             @RequestParam(required = false, defaultValue = "10") int limit
     ) {
-        return lopService.layDsLopTheoGv(authService.getCurrentUser().getId(), search, page, limit);
+        return lopService.layDsLopTheoGv(authService.getCurrentUser().getId(), truongId, search, page, limit);
     }
 
 
