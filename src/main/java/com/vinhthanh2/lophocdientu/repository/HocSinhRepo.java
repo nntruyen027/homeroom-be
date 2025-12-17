@@ -108,28 +108,35 @@ public class HocSinhRepo {
 
         String sql = """
                     SELECT * FROM auth.fn_sua_hoc_sinh(
-                            :p_user_id ,
-                            :p_lop_id ,
-                            :p_so_thich,
-                            :p_mon_hoc_yeu_thich,
-                            :p_diem_manh,
-                            :p_diem_yeu,
-                            :p_ghi_chu
+                              :p_user_id,
+                              :p_lop_id,
+                              :p_ho_ten ,
+                              :p_so_thich ,
+                              :p_mon_hoc_yeu_thich ,
+                              :p_diem_manh ,
+                              :p_diem_yeu ,
+                              :p_ghi_chu ,
+                              :p_xa_id ,
+                              :p_ngay_sinh ,
+                              :p_la_nam ,
+                              :p_dia_chi 
                     )
                 """;
 
         return hocSinhMapper.toHocSinhRes((HocSinhPro) entityManager.createNativeQuery(sql, HocSinhPro.class)
                 .setParameter("p_user_id", id)
-                .setParameter("p_avatar", req.getAvatar())
-                .setParameter("p_ho_ten", req.getHoTen())
                 .setParameter("p_lop_id", req.getLopId())
+                .setParameter("p_ho_ten", req.getHoTen())
 
                 .setParameter("p_so_thich", req.getSoThich())
                 .setParameter("p_mon_hoc_yeu_thich", req.getMonHocYeuThich())
                 .setParameter("p_diem_manh", req.getDiemManh())
                 .setParameter("p_diem_yeu", req.getDiemYeu())
                 .setParameter("p_ghi_chu", req.getGhiChu())
-
+                .setParameter("p_xa_id", req.getXaId())
+                .setParameter("p_ngay_sinh", req.getNgaySinh())
+                .setParameter("p_la_nam", req.getLaNam())
+                .setParameter("p_dia_chi", req.getDiaChiChiTiet())
 
                 .getSingleResult());
     }

@@ -1,13 +1,18 @@
-DROP FUNCTION IF EXISTS auth.fn_cap_nhat_hoc_sinh;
+DROP FUNCTION IF EXISTS auth.fn_sua_hoc_sinh;
 
-CREATE OR REPLACE FUNCTION auth.fn_cap_nhat_hoc_sinh(
+CREATE OR REPLACE FUNCTION auth.fn_sua_hoc_sinh(
     p_user_id BIGINT,
     p_lop_id BIGINT,
+    p_ho_ten VARCHAR(500),
     p_so_thich VARCHAR(500),
     p_mon_hoc_yeu_thich VARCHAR(500),
     p_diem_manh VARCHAR(500),
     p_diem_yeu VARCHAR(500),
-    p_ghi_chu VARCHAR(500)
+    p_ghi_chu VARCHAR(500),
+    p_xa_id BIGINT,
+    p_ngay_sinh DATE,
+    p_la_nam BOOLEAN,
+    p_dia_chi VARCHAR(500)
 )
     RETURNS SETOF auth.v_hoc_sinh_full
     LANGUAGE plpgsql
@@ -18,14 +23,27 @@ BEGIN
         RAISE EXCEPTION 'Học sinh user_id % không tồn tại', p_user_id;
     END IF;
 
+    PERFORM auth.fn_cap_nhat_thong_tin_nguoi_dung(
+            p_user_id := p_user_id,
+            p_xa_id := p_xa_id,
+            p_ngay_sinh := p_ngay_sinh,
+            p_la_nam := p_la_nam,
+            p_dia_chi := p_dia_chi
+            );
+
     UPDATE auth.hoc_sinh
     SET lop_id            = p_lop_id,
         so_thich          = p_so_thich,
         mon_hoc_yeu_thich = p_mon_hoc_yeu_thich,
         diem_manh         = p_diem_manh,
         diem_yeu          = p_diem_yeu,
-        ghi_chu           = p_ghi_chu
+        ghi_chu           = p_ghi_chu,
+        xa_id             = p_xa_id
     WHERE user_id = p_user_id;
+
+    UPDATE auth.users
+    SET ho_ten = p_ho_ten
+    WHERE id = p_user_id;
 
     RETURN QUERY
         SELECT *

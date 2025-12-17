@@ -13,7 +13,7 @@ BEGIN
         RAISE EXCEPTION 'Giáo viên với id % không tồn tại', p_giao_vien_id;
     END IF;
 
-    IF NOT EXISTS(SELECT 1 FROM school.truong WHERE id = p_truong_id) THEN
+    IF p_truong_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM school.truong WHERE id = p_truong_id) THEN
         RAISE EXCEPTION 'Trường với id % không tồn tại', p_truong_id;
     end if;
 
