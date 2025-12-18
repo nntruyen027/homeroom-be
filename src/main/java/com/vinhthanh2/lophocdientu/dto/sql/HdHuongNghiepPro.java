@@ -22,4 +22,6 @@ public class HdHuongNghiepPro {
     private Long nguoiTaoId;
     private String nguoiTaoUsername;
     private String nguoiTaoHoTen;
+
+    private Long[] dsLopId;
 }

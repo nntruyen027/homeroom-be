@@ -34,7 +34,7 @@ import java.io.IOException;
         name = "Quản lý học sinh của giáo viên",
         description = "API cho giáo viên quản lý thông tin học sinh theo lớp"
 )
-public class HocSinhGiaoVienController {
+public class GvHocSinhController {
 
     private final HocSinhService hocSinhService;
 

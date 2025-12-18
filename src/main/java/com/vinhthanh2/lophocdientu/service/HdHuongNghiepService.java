@@ -40,4 +40,8 @@ public class HdHuongNghiepService {
     public void xoaHdHuongNghiep(Long id) {
         hdHuongNghiepRepo.xoaHoatDong(id);
     }
+
+    public HdHuongNghiepRes phanHoatDongChoLop(Long id, List<Long> lopIds) {
+        return hdHuongNghiepRepo.phanHoatDongChoLop(id, lopIds);
+    }
 }

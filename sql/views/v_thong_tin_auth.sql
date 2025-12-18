@@ -1,4 +1,4 @@
-DROP VIEW IF EXISTS auth.v_thong_tin_auth CASCADE;
+DROP VIEW IF EXISTS auth.v_thong_tin_auth;
 CREATE VIEW auth.v_thong_tin_auth AS
 SELECT u.id,
        u.username,

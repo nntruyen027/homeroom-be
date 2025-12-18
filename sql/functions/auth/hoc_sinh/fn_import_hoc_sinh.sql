@@ -72,7 +72,7 @@ BEGIN
                         v_ngay_sinh,
                         v_la_nam,
                         NULL,
-                        NULL
+                        ''
                      );
         END LOOP;
 END;

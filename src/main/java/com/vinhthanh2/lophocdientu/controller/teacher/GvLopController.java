@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
 @SecurityRequirement(name = "BearerAuth")
 @Tag(name = "Quản lý lớp của giáo viên", description = "API cho giáo viên quản lý lớp học")
-public class LopGiaoVienController {
+public class GvLopController {
 
     private final LopService lopService;
     private final AuthService authService;

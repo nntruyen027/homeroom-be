@@ -3,7 +3,7 @@ DROP FUNCTION IF EXISTS auth.fn_lay_nguoi_dung_theo_id;
 CREATE OR REPLACE FUNCTION auth.fn_lay_nguoi_dung_theo_id(
     p_id BIGINT
 )
-    RETURNS SETOF auth.v_users
+    RETURNS SETOF auth.v_users_full
 AS
 $$
 BEGIN
@@ -12,7 +12,7 @@ BEGIN
     end if;
 
     RETURN QUERY SELECT *
-                 FROM auth.v_users
+                 FROM auth.v_users_full
                  WHERE id = p_id
                  LIMIT 1;
 end;

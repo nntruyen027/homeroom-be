@@ -37,8 +37,7 @@ BEGIN
         mon_hoc_yeu_thich = p_mon_hoc_yeu_thich,
         diem_manh         = p_diem_manh,
         diem_yeu          = p_diem_yeu,
-        ghi_chu           = p_ghi_chu,
-        xa_id             = p_xa_id
+        ghi_chu           = p_ghi_chu
     WHERE user_id = p_user_id;
 
     UPDATE auth.users

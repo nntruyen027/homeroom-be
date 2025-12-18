@@ -15,6 +15,8 @@ import lombok.Setter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/giao-vien/hoat-dong-huong-nghiep")
 @Getter
@@ -114,4 +116,23 @@ public class HdHuongNghiepController {
     ) {
         hdHuongNghiepService.xoaHdHuongNghiep(id);
     }
+
+    @Operation(
+            summary = "Cập nhật hoạt động hướng nghiệp",
+            description = "Giáo viên cập nhật thông tin hoạt động hướng nghiệp theo ID"
+    )
+    @SecurityApiResponses
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Cập nhật hoạt động hướng nghiệp thành công"
+    )
+    @PostMapping("/{id}/lop")
+    public HdHuongNghiepRes phanHoatDongChoLop(
+            @PathVariable Long id,
+            @RequestBody List<Long> lopIds
+    ) {
+        return hdHuongNghiepService.phanHoatDongChoLop(id, lopIds);
+    }
+
+
 }

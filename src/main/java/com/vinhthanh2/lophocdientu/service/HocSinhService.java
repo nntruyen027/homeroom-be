@@ -47,6 +47,10 @@ public class HocSinhService {
                 .build();
     }
 
+    public HocSinhRes layHsTheoId(Long userId) {
+        return hocSinhRepo.layHsTheoId(userId);
+    }
+
     public HocSinhRes taoHocSinh(StudentRegisterReq req) {
         req.setPassword(passwordEncoder.encode(req.getPassword()));
         return (hocSinhRepo.taoHocSinh(req));

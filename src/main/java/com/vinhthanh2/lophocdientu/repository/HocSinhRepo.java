@@ -49,6 +49,21 @@ public class HocSinhRepo {
         return pros.stream().map(hocSinhMapper::toHocSinhRes).toList();
     }
 
+    public HocSinhRes layHsTheoId(Long userId) {
+
+        String sql = """
+                    SELECT * FROM auth.fn_lay_hs_theo_id(
+                        :p_id
+                    )
+                """;
+
+        HocSinhPro pro = (HocSinhPro) entityManager.createNativeQuery(sql, HocSinhPro.class)
+                .setParameter("p_id", userId)
+                .getSingleResult();
+
+        return hocSinhMapper.toHocSinhRes(pro);
+    }
+
     // ============================================================
     // ĐẾM HỌC SINH THEO LỚP
     // ============================================================
@@ -148,7 +163,7 @@ public class HocSinhRepo {
     public boolean xoaHocSinh(Long id) {
 
         String sql = """
-                    SELECT school.fn_xoa_nguoi_dung(:p_id)
+                    SELECT auth.fn_xoa_nguoi_dung(:p_id)
                 """;
 
         Object result = entityManager.createNativeQuery(sql)

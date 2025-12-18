@@ -1,4 +1,4 @@
-DROP VIEW IF EXISTS auth.v_users_full CASCADE;
+DROP VIEW IF EXISTS auth.v_users_full;
 
 CREATE VIEW auth.v_users_full AS
 SELECT u.id,

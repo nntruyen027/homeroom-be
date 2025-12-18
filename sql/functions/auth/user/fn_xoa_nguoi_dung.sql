@@ -3,7 +3,7 @@ DROP FUNCTION IF EXISTS auth.fn_xoa_nguoi_dung;
 CREATE OR REPLACE FUNCTION auth.fn_xoa_nguoi_dung(
     p_user_id BIGINT
 )
-    RETURNS SETOF auth.v_users_full
+    RETURNS void
     LANGUAGE plpgsql
 AS
 $$
@@ -16,7 +16,5 @@ BEGIN
     FROM auth.users
     WHERE id = p_user_id;
 
-    -- trả về rỗng nhưng đúng kiểu view
-    RETURN;
 END;
 $$;

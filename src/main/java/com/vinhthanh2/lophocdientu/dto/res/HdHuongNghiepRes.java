@@ -20,4 +20,6 @@ public class HdHuongNghiepRes {
 
     private Long nguoiTaoId;
     private String nguoiTaoHoTen;
+
+    private Long[] dsLopId;
 }

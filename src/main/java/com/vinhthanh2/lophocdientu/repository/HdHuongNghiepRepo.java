@@ -116,4 +116,20 @@ public class HdHuongNghiepRepo {
                 .setParameter("p_id", id)
                 .getSingleResult();
     }
+
+    public HdHuongNghiepRes phanHoatDongChoLop(Long id, List<Long> lopIds) {
+        String sql = """
+                select * from school.fn_phan_hoat_dong_cho_lop(
+                              p_hoat_dong_id := :p_hd_id, p_ds_lop_id := :p_ds_lop_id
+                )
+                """;
+
+        HdHuongNghiepPro pros = (HdHuongNghiepPro) entityManager.createNativeQuery(
+                        sql, HdHuongNghiepPro.class
+                ).setParameter("p_hd_id", id)
+                .setParameter("p_ds_lop_id", lopIds)
+                .getSingleResult();
+
+        return hdHuongNghiepMapper.toDto(pros);
+    }
 }
