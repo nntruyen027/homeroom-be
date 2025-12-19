@@ -19,7 +19,7 @@ public class LogHuongNghiepRepo {
 
     private final LogHdHuongNghiepMapper mapper;
 
-    public List<LogHdHuongNghiepRes> layDsLog(Long userId, Long hdId, int page, int limit) {
+    public List<LogHdHuongNghiepRes> layDsLog(Long userId, int page, int limit) {
         int offset = (page - 1) * limit;
 
         String sql = """
@@ -34,7 +34,7 @@ public class LogHuongNghiepRepo {
         @SuppressWarnings("unchecked")
         List<LogHdHuongNghiepPro> pros = entityManager.createNativeQuery(sql, LogHdHuongNghiepPro.class)
                 .setParameter("user_id", userId)
-                .setParameter("hd_id", hdId)
+                .setParameter("hd_id", null)
                 .setParameter("limit", limit)
                 .setParameter("offset", offset)
                 .getResultList();
@@ -42,14 +42,14 @@ public class LogHuongNghiepRepo {
         return pros.stream().map(mapper::toDto).toList();
     }
 
-    public Long demDsLog(Long userId, Long hdId) {
+    public Long demDsLog(Long userId) {
         String sql = """
                     SELECT school.fn_dem_log_hd_huong_nghiep(:userId, :hdId)
                 """;
 
         Object result = entityManager.createNativeQuery(sql)
                 .setParameter("userId", userId)
-                .setParameter("hdId", hdId)
+                .setParameter("hdId", null)
                 .getSingleResult();
 
         if (result == null) return 0L;

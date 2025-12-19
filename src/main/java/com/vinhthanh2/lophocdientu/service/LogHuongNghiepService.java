@@ -14,11 +14,11 @@ import java.util.List;
 public class LogHuongNghiepService {
     private final LogHuongNghiepRepo logHuongNghiepRepo;
 
-    public PageResponse<LogHdHuongNghiepRes> layDsLog(Long userId, Long hdId, int page, int limit) {
+    public PageResponse<LogHdHuongNghiepRes> layDsLog(Long userId, int page, int limit) {
         List<LogHdHuongNghiepRes> data = logHuongNghiepRepo.layDsLog(
-                userId, hdId, page, limit
+                userId, page, limit
         );
-        Long totalElements = logHuongNghiepRepo.demDsLog(userId, hdId);
+        Long totalElements = logHuongNghiepRepo.demDsLog(userId);
         int totalPages = (int) Math.ceil((double) totalElements / (double) limit);
 
         return PageResponse.<LogHdHuongNghiepRes>builder()

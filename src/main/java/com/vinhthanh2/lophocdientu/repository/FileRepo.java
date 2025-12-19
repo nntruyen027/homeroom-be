@@ -72,6 +72,7 @@ public class FileRepo {
                 .setParameter("p_file_name", fileReq.getFileName())
                 .setParameter("p_stored_name", fileReq.getStoredName())
                 .setParameter("p_url", fileReq.getStoredName())
+                .setParameter("p_content_type", fileReq.getContentType())
                 .setParameter("p_size", fileReq.getSize())
                 .setParameter("p_user_id", fileReq.getUserId())
                 .getSingleResult();

@@ -28,13 +28,12 @@ public class GvLogHuongNghiepController {
             description = "API trả về danh sách nhật ký theo hoạt động có phân trang và tìm kiếm.")
     @SecurityApiResponses
     @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
-    @GetMapping("/{hdId}")
-    PageResponse<LogHdHuongNghiepRes> layDsLogTheoHoatDong
-            (@PathVariable Long hdId,
-             @RequestParam(required = false) Long userId,
+    @GetMapping("/{userId}")
+    PageResponse<LogHdHuongNghiepRes> layDsLogTheoHocSinh
+            (@PathVariable Long userId,
              @RequestParam(defaultValue = "1", required = false) int page,
              @RequestParam(defaultValue = "10", required = false) int limit) {
-        return logHuongNghiepService.layDsLog(userId, hdId, page, limit);
+        return logHuongNghiepService.layDsLog(userId, page, limit);
     }
 
     @Operation(summary = "Nhận xét nhật ký",

@@ -25,16 +25,16 @@ public class LogHuongNghiepController {
     private final LogHuongNghiepService logHuongNghiepService;
     private final AuthService authService;
 
-    @Operation(summary = "Lấy danh sách nhật ký theo hoạt động",
-            description = "API trả về danh sách nhật ký theo hoạt động có phân trang và tìm kiếm.")
+    @Operation(summary = "Lấy danh sách nhật ký theo học sinh",
+            description = "API trả về danh sách nhật ký theo học sinh có phân trang và tìm kiếm.")
     @SecurityApiResponses
     @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
     @GetMapping("/{hdId}")
     public PageResponse<LogHdHuongNghiepRes> layDsLogTheoHoatDong
-            (@PathVariable Long hdId,
-             @RequestParam(defaultValue = "1", required = false) int page,
-             @RequestParam(defaultValue = "10", required = false) int limit) {
-        return logHuongNghiepService.layDsLog(authService.getCurrentUser().getId(), hdId, page, limit);
+            (
+                    @RequestParam(defaultValue = "1", required = false) int page,
+                    @RequestParam(defaultValue = "10", required = false) int limit) {
+        return logHuongNghiepService.layDsLog(authService.getCurrentUser().getId(), page, limit);
     }
 
     @Operation(summary = "Thêm nhật ký hướng nghiệp",
