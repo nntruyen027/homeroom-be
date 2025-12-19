@@ -3,7 +3,7 @@ package com.vinhthanh2.lophocdientu.dto.sql;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -15,5 +15,5 @@ public class FilePro {
     private String contentType;
     private Long size;
     private Long userId;
-    private LocalDateTime updatedAt;
+    private Timestamp updatedAt;
 }

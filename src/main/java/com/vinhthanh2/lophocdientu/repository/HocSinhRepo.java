@@ -205,4 +205,41 @@ public class HocSinhRepo {
                 "auth.fn_import_hoc_sinh", "auth.hoc_sinh_input"
         );
     }
+
+    @Transactional
+    public HocSinhRes suaThongTinCaNhan(Long id, UpdateStudentReq updateStudentReq) {
+        String sql = """
+                    SELECT * FROM auth.fn_sua_hoc_sinh_full(
+                       p_user_id := :id,
+                       p_so_thich := :soThich,
+                       p_mon_hoc_yeu_thich := :monHocYeuThich,
+                       p_diem_manh := :diemManh,
+                       p_diem_yeu := :diemYeu,
+                       p_ghi_chu := :ghiChu,
+                       p_xa_id := :xaId,
+                       p_ngay_sinh := :ngaySinh,
+                       p_la_nam := :laNam,
+                       p_dia_chi := :diaChiChiTiet,
+                       p_avatar := :avatar
+                
+                    )
+                """;
+
+        HocSinhPro giaoVienPro = (HocSinhPro) entityManager.createNativeQuery(sql, HocSinhPro.class)
+                .setParameter("id", id)
+                .setParameter("soThich", updateStudentReq.getSoThich())
+                .setParameter("monHocYeuThich", updateStudentReq.getMonHocYeuThich())
+                .setParameter("diemManh", updateStudentReq.getDiemManh())
+                .setParameter("diemYeu", updateStudentReq.getDiemYeu())
+                .setParameter("ghiChu", updateStudentReq.getGhiChu())
+                .setParameter("xaId", updateStudentReq.getXaId())
+                .setParameter("ngaySinh", updateStudentReq.getNgaySinh())
+                .setParameter("laNam", updateStudentReq.getLaNam())
+                .setParameter("avatar", updateStudentReq.getAvatar())
+                .setParameter("diaChiChiTiet", updateStudentReq.getDiaChiChiTiet())
+                .getSingleResult();
+
+        return hocSinhMapper.toHocSinhRes(giaoVienPro);
+
+    }
 }

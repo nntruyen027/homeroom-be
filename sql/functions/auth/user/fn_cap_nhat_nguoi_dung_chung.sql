@@ -3,8 +3,8 @@ DROP FUNCTION IF EXISTS auth.fn_cap_nhat_nguoi_dung;
 CREATE OR REPLACE FUNCTION auth.fn_cap_nhat_nguoi_dung(
     p_user_id BIGINT,
     p_ho_ten VARCHAR(500),
-    p_avatar TEXT,
-    p_is_active BOOLEAN
+    p_avatar VARCHAR(500),
+    p_is_active BOOLEAN DEFAULT true
 )
     RETURNS SETOF auth.v_users_full
     LANGUAGE plpgsql

@@ -114,6 +114,38 @@ public class GiaoVienRepo {
         return giaoVienMapper.toGiaoVienRes(giaoVienPro);
     }
 
+    @Transactional
+    public TeacherRes suaGiaoVienFull(Long id, UpdateTeacherReq req) {
+
+        String sql = """
+                    SELECT * FROM auth.fn_cap_nhat_giao_vien_full(
+                        p_user_id := :userId, 
+                        p_ho_ten := :hoTen, 
+                        p_avatar := :avatar, 
+                        p_ngay_sinh := :ngaySinh, 
+                        p_xa_id := :xaId, 
+                        p_dia_chi_chi_tiet := :diaChiChiTiet, 
+                        p_la_nam := :laNam, 
+                        p_bo_mon := :boMon, 
+                        p_chuc_vu := :chucVu
+                    )
+                """;
+
+        GiaoVienPro giaoVienPro = (GiaoVienPro) entityManager.createNativeQuery(sql, GiaoVienPro.class)
+                .setParameter("userId", id)
+                .setParameter("hoTen", req.getHoTen())
+                .setParameter("avatar", req.getAvatar())
+                .setParameter("ngaySinh", req.getNgaySinh())
+                .setParameter("xaId", req.getXaId())
+                .setParameter("diaChiChiTiet", req.getDiaChiChiTiet())
+                .setParameter("laNam", req.getLaNam())
+                .setParameter("boMon", req.getBoMon())
+                .setParameter("chucVu", req.getChucVu())
+                .getSingleResult();
+
+        return giaoVienMapper.toGiaoVienRes(giaoVienPro);
+    }
+
     // ============================================================
     // XÓA GIÁO VIÊN
     // ============================================================
@@ -130,4 +162,18 @@ public class GiaoVienRepo {
         if (result instanceof Boolean b) return b;
         return Boolean.parseBoolean(result.toString());
     }
+
+    public TeacherRes layGiaoVienTheoId(Long giaoVienId) {
+        String sql = """
+                select * from auth.fn_lay_giao_vien_theo_id(:id);
+                """;
+
+        GiaoVienPro teacherRes = (GiaoVienPro) entityManager.createNativeQuery(sql, GiaoVienPro.class)
+                .setParameter("id", giaoVienId)
+                .getSingleResult();
+
+        return giaoVienMapper.toGiaoVienRes(teacherRes);
+    }
+
+
 }

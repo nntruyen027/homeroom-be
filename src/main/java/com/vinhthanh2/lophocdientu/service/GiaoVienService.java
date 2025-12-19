@@ -71,11 +71,14 @@ public class GiaoVienService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy người dùng"));
 
 
-        return suaGiaoVien(user.getId(), updateTeacherReq);
+        return giaoVienRepo.suaGiaoVienFull(user.getId(), updateTeacherReq);
     }
 
     public void xoaGiaoVien(Long id) {
         giaoVienRepo.xoaGiaoVien(id);
     }
 
+    public TeacherRes layGiaoVienTheoId(Long giaoVienId) {
+        return giaoVienRepo.layGiaoVienTheoId(giaoVienId);
+    }
 }

@@ -16,17 +16,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("hoc-sinh/")
+@RequestMapping("/hoc-sinh")
 @Getter
 @Setter
 @AllArgsConstructor
-@PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+@PreAuthorize("hasRole('STUDENT')")
 @SecurityRequirement(name = "BearerAuth")
 @Tag(name = "Quản lý học sinh", description = "Các API quản lý thông tin học sinh")
 public class HocSinhController {
@@ -50,4 +47,18 @@ public class HocSinhController {
         return ResponseEntity.ok(hocSinhService.suaThongTinCaNhan(updateStudentReq));
     }
 
+    @Operation(
+            summary = "Lấy thông tin cá nhân của học sinh",
+            description = "API cho phép học sinh lấy thông tin cá nhân của mình."
+    )
+    @SecurityApiResponses
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Cập nhật thông tin thành công"),
+            @ApiResponse(responseCode = "400", description = "Dữ liệu không hợp lệ", content = @Content),
+    })
+    @GetMapping("")
+    public ResponseEntity<HocSinhRes> getCurrentUser() {
+        Long hocSinhId = authService.getCurrentUser().getId();
+        return ResponseEntity.ok(hocSinhService.layHsTheoId(hocSinhId));
+    }
 }

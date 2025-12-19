@@ -141,7 +141,7 @@ public class AuthController {
     public ResponseEntity<UserFullRes> getCurrentUser() {
         return ResponseEntity.ok(authService.getCurrentUserDto());
     }
-
+    
     // -----------------------------------------------------------
     // ĐỔI MẬT KHẨU
     // -----------------------------------------------------------

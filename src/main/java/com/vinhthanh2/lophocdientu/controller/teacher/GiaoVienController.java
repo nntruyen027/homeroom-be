@@ -2,6 +2,7 @@ package com.vinhthanh2.lophocdientu.controller.teacher;
 
 import com.vinhthanh2.lophocdientu.config.SecurityApiResponses;
 import com.vinhthanh2.lophocdientu.dto.req.UpdateTeacherReq;
+import com.vinhthanh2.lophocdientu.dto.res.TeacherRes;
 import com.vinhthanh2.lophocdientu.service.AuthService;
 import com.vinhthanh2.lophocdientu.service.GiaoVienService;
 import com.vinhthanh2.lophocdientu.service.LopService;
@@ -17,10 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/giao-vien")
@@ -50,7 +48,7 @@ public class GiaoVienController {
             @ApiResponse(responseCode = "400", description = "Dữ liệu không hợp lệ", content = @Content),
     })
     @PutMapping("")
-    public ResponseEntity<?> suaThongTinCaNhan(
+    public ResponseEntity<TeacherRes> suaThongTinCaNhan(
             @RequestBody
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Thông tin cần cập nhật",
@@ -60,5 +58,20 @@ public class GiaoVienController {
             UpdateTeacherReq updateTeacherReq
     ) {
         return ResponseEntity.ok(giaoVienService.suaThongTinCaNhan(updateTeacherReq));
+    }
+
+    @Operation(
+            summary = "Lấy thông tin cá nhân của giáo viên",
+            description = "API cho phép giáo viên lấy thông tin cá nhân của mình."
+    )
+    @SecurityApiResponses
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Cập nhật thông tin thành công"),
+            @ApiResponse(responseCode = "400", description = "Dữ liệu không hợp lệ", content = @Content),
+    })
+    @GetMapping("")
+    public ResponseEntity<TeacherRes> getCurrentUser() {
+        Long giaoVienId = authService.getCurrentUser().getId();
+        return ResponseEntity.ok(giaoVienService.layGiaoVienTheoId(giaoVienId));
     }
 }

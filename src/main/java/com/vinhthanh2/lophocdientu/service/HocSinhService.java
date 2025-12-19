@@ -72,7 +72,7 @@ public class HocSinhService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
 
-        return suaHocSinh(user.getId(), updateStudentReq);
+        return hocSinhRepo.suaThongTinCaNhan(user.getId(), updateStudentReq);
     }
 
     public void xoaHocSinh(Long id) {
