@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/giao-vien/huong-nghiep/log")
 @AllArgsConstructor
 @PreAuthorize("hasRole('TEACHER') or hasRole('ADMIN')")
-@Tag(name = "Quản lý nhận ký hướng nghiệp cho giáo viên")
+@Tag(name = "Quản lý nhật ký hướng nghiệp cho giáo viên")
 @SecurityRequirement(name = "BearerAuth")
 public class GvLogHuongNghiepController {
     private final LogHuongNghiepService logHuongNghiepService;

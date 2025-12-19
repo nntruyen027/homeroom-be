@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -15,7 +15,7 @@ public class ThongBaoViewRes {
     private String tieuDe;
     private String noiDung;
     private Long lopId;
-    private Instant thoiGianTao;
+    private LocalDateTime thoiGianTao;
 
     @JsonProperty("ds_user_da_xem")
     private List<UserDaXemDto> dsUserDaXem;

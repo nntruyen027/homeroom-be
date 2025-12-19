@@ -118,13 +118,13 @@ public class HdHuongNghiepController {
     }
 
     @Operation(
-            summary = "Cập nhật hoạt động hướng nghiệp",
-            description = "Giáo viên cập nhật thông tin hoạt động hướng nghiệp theo ID"
+            summary = "Phân hoạt động hướng nghiệp cho lớp",
+            description = "Giáo viên phân hoạt động hướng nghiệp cho lơp"
     )
     @SecurityApiResponses
     @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Cập nhật hoạt động hướng nghiệp thành công"
+            description = "Phân hoạt động hướng nghiệp cho lớp thành công"
     )
     @PostMapping("/{id}/lop")
     public HdHuongNghiepRes phanHoatDongChoLop(

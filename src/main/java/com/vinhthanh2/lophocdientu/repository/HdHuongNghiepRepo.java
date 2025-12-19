@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -36,7 +37,7 @@ public class HdHuongNghiepRepo {
         List<HdHuongNghiepPro> pros = entityManager.createNativeQuery(sql, HdHuongNghiepPro.class)
                 .setParameter("id_nguoi_tao", nguoiTaoId)
                 .setParameter("p_search", search)
-                .setParameter("p_page", page)
+                .setParameter("p_page", offset)
                 .setParameter("p_limit", limit)
                 .getResultList();
         ;
@@ -118,18 +119,65 @@ public class HdHuongNghiepRepo {
     }
 
     public HdHuongNghiepRes phanHoatDongChoLop(Long id, List<Long> lopIds) {
+
+        String lopIdSql =
+                lopIds.stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.joining(","));
+
         String sql = """
                 select * from school.fn_phan_hoat_dong_cho_lop(
-                              p_hoat_dong_id := :p_hd_id, p_ds_lop_id := :p_ds_lop_id
+                    %d,
+                    ARRAY[%s]::bigint[]
+                )
+                """.formatted(id, lopIdSql);
+
+        HdHuongNghiepPro pros =
+                (HdHuongNghiepPro) entityManager
+                        .createNativeQuery(sql, HdHuongNghiepPro.class)
+                        .getSingleResult();
+
+        return hdHuongNghiepMapper.toDto(pros);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<HdHuongNghiepRes> layTatCaHoatDongTheoHs(Long userId, String search, int page, int limit) {
+        int offset = (page - 1) * limit;
+
+        System.out.println(offset);
+
+        String sql = """
+                select * from school.fn_lay_hdhn_theo_hoc_sinh(
+                              :id_nguoi_tao,
+                              :p_search,
+                              :p_offset,
+                              :p_limit
                 )
                 """;
 
-        HdHuongNghiepPro pros = (HdHuongNghiepPro) entityManager.createNativeQuery(
-                        sql, HdHuongNghiepPro.class
-                ).setParameter("p_hd_id", id)
-                .setParameter("p_ds_lop_id", lopIds)
+        List<HdHuongNghiepPro> pros = entityManager.createNativeQuery(sql, HdHuongNghiepPro.class)
+                .setParameter("id_nguoi_tao", userId)
+                .setParameter("p_search", search)
+                .setParameter("p_offset", offset)
+                .setParameter("p_limit", limit)
+                .getResultList();
+        ;
+        return pros.stream().map(hdHuongNghiepMapper::toDto).toList();
+    }
+
+    public Long demTatCaHoatDongTheoHs(Long userId, String search) {
+        String sql = """
+                    SELECT school.fn_dem_hdhn_theo_hoc_sinh(:user_id, :p_search)
+                """;
+
+        Object result = entityManager.createNativeQuery(sql)
+                .setParameter("user_id", userId)
+                .setParameter("p_search", search)
                 .getSingleResult();
 
-        return hdHuongNghiepMapper.toDto(pros);
+        if (result == null) return 0L;
+        if (result instanceof Number num) return num.longValue();
+
+        return Long.parseLong(result.toString());
     }
 }

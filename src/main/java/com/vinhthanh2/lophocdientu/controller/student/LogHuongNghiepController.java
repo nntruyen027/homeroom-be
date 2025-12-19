@@ -11,15 +11,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/hoc-sinh/huong-nghiep/log")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @PreAuthorize("hasRole('STUDENT')")
-@Tag(name = "Quản lý nhận ký hướng nghiệp cho học sinh")
+@Tag(name = "Quản lý nhật ký hướng nghiệp cho học sinh")
 @SecurityRequirement(name = "BearerAuth")
 public class LogHuongNghiepController {
     private final LogHuongNghiepService logHuongNghiepService;
@@ -30,11 +30,11 @@ public class LogHuongNghiepController {
     @SecurityApiResponses
     @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
     @GetMapping("/{hdId}")
-    private PageResponse<LogHdHuongNghiepRes> layDsLogTheoHoatDong
+    public PageResponse<LogHdHuongNghiepRes> layDsLogTheoHoatDong
             (@PathVariable Long hdId,
              @RequestParam(defaultValue = "1", required = false) int page,
              @RequestParam(defaultValue = "10", required = false) int limit) {
-        return logHuongNghiepService.layDsLog(authService.getCurrentUserDto().getId(), hdId, page, limit);
+        return logHuongNghiepService.layDsLog(authService.getCurrentUser().getId(), hdId, page, limit);
     }
 
     @Operation(summary = "Thêm nhật ký hướng nghiệp",
@@ -42,7 +42,7 @@ public class LogHuongNghiepController {
     @SecurityApiResponses
     @ApiResponse(responseCode = "200", description = "Thêm thành công")
     @PostMapping("/{hdId}")
-    private LogHdHuongNghiepRes themLog(
+    public LogHdHuongNghiepRes themLog(
             @PathVariable Long hdId,
             @RequestBody LogHdHuongNghiepReq logHdHuongNghiepReq
     ) {
@@ -50,12 +50,12 @@ public class LogHuongNghiepController {
     }
 
 
-    @Operation(summary = "Sửa nhật k",
+    @Operation(summary = "Sửa nhật ký",
             description = "API sửa nhật ký.")
     @SecurityApiResponses
     @ApiResponse(responseCode = "200", description = "Sửa nhật ký thành công")
     @PutMapping("/{hdId}")
-    private LogHdHuongNghiepRes suaLog
+    public LogHdHuongNghiepRes suaLog
             (
                     @PathVariable Long hdId,
                     @RequestBody LogHdHuongNghiepReq logHdHuongNghiepReq
@@ -68,7 +68,7 @@ public class LogHuongNghiepController {
     @SecurityApiResponses
     @ApiResponse(responseCode = "200", description = "Xóa thành công")
     @DeleteMapping("/{hdId}")
-    private void xoaLog(
+    public void xoaLog(
             @PathVariable Long hdId
     ) {
         logHuongNghiepService.xoaLog(hdId, authService.getCurrentUser().getId());

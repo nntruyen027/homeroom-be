@@ -16,8 +16,7 @@ public class HdHuongNghiepService {
     private final AuthService authService;
 
     public PageResponse<HdHuongNghiepRes> layDsHdHuongNghiep(Long userId, String search, int page, int limit) {
-        int offset = (page - 1) * limit;
-        List<HdHuongNghiepRes> data = hdHuongNghiepRepo.layTatCaHoatDong(userId, search, offset, limit);
+        List<HdHuongNghiepRes> data = hdHuongNghiepRepo.layTatCaHoatDong(userId, search, page, limit);
         Long totalElements = hdHuongNghiepRepo.demTatCaHoatDong(userId, search);
         int totalPages = (int) Math.ceil((double) totalElements / (double) limit);
         return PageResponse.<HdHuongNghiepRes>builder()
@@ -43,5 +42,18 @@ public class HdHuongNghiepService {
 
     public HdHuongNghiepRes phanHoatDongChoLop(Long id, List<Long> lopIds) {
         return hdHuongNghiepRepo.phanHoatDongChoLop(id, lopIds);
+    }
+
+    public PageResponse<HdHuongNghiepRes> layDsHdHuongNghiepTheoHs(Long userId, String search, int page, int limit) {
+        List<HdHuongNghiepRes> data = hdHuongNghiepRepo.layTatCaHoatDongTheoHs(userId, search, page, limit);
+        Long totalElements = hdHuongNghiepRepo.demTatCaHoatDongTheoHs(userId, search);
+        int totalPages = (int) Math.ceil((double) totalElements / (double) limit);
+        return PageResponse.<HdHuongNghiepRes>builder()
+                .data(data)
+                .totalPages(totalPages)
+                .totalElements(totalElements)
+                .page(page)
+                .size(limit)
+                .build();
     }
 }

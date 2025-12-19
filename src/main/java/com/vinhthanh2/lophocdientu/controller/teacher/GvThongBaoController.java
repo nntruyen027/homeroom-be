@@ -1,10 +1,13 @@
 package com.vinhthanh2.lophocdientu.controller.teacher;
 
+import com.vinhthanh2.lophocdientu.config.SecurityApiResponses;
 import com.vinhthanh2.lophocdientu.dto.req.ThongBaoReq;
 import com.vinhthanh2.lophocdientu.dto.res.PageResponse;
 import com.vinhthanh2.lophocdientu.dto.res.ThongBaoViewRes;
 import com.vinhthanh2.lophocdientu.service.AuthService;
 import com.vinhthanh2.lophocdientu.service.ThongBaoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -22,6 +25,10 @@ public class GvThongBaoController {
     private final AuthService authService;
 
 
+    @Operation(summary = "Lấy danh sách thông báo",
+            description = "API trả về danh sách thông báo có phân trang và tìm kiếm.")
+    @SecurityApiResponses
+    @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
     @GetMapping()
     PageResponse<ThongBaoViewRes> layTatCaThongBao(
             @RequestParam(required = false) Long lopId,
@@ -34,16 +41,28 @@ public class GvThongBaoController {
         );
     }
 
+    @Operation(summary = "Tạo thông báo",
+            description = "Tạo thông báo")
+    @SecurityApiResponses
+    @ApiResponse(responseCode = "200", description = "Tạo thành công")
     @PostMapping("/{lopId}")
     ThongBaoViewRes taoThongBao(@PathVariable Long lopId, @RequestBody ThongBaoReq thongBaoReq) {
         return thongBaoService.taoThongBao(lopId, authService.getCurrentUser().getId(), thongBaoReq);
     }
 
+    @Operation(summary = "Sửa thông báo",
+            description = "Sửa thông báo")
+    @SecurityApiResponses
+    @ApiResponse(responseCode = "200", description = "Sửa thành công")
     @PutMapping("/{id}")
     ThongBaoViewRes suaThongBao(@PathVariable Long id, @RequestBody ThongBaoReq thongBaoReq) {
         return thongBaoService.suaThongBao(id, thongBaoReq);
     }
 
+    @Operation(summary = "Xóa thông báo",
+            description = "Xóa thông báo")
+    @SecurityApiResponses
+    @ApiResponse(responseCode = "200", description = "Xóa thành công")
     @DeleteMapping("/{id}")
     void xoaThongBao(@PathVariable Long id) {
         thongBaoService.xoaThongBao(id);

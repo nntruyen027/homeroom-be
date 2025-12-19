@@ -1,12 +1,10 @@
 package com.vinhthanh2.lophocdientu.dto.sql;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vinhthanh2.lophocdientu.dto.res.UserDaXemDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.Instant;
-import java.util.List;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -16,9 +14,9 @@ public class ThongBaoViewPro {
     private String tieuDe;
     private String noiDung;
     private Long lopId;
-    private Instant thoiGianTao;
+    private Timestamp thoiGianTao;
 
     @JsonProperty("ds_user_da_xem")
-    private List<UserDaXemDto> dsUserDaXem;
+    private String dsUserDaXem;
     private Long nguoiTaoId;
 }
