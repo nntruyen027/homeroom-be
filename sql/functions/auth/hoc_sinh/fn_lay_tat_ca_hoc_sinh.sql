@@ -25,7 +25,12 @@ BEGIN
                 OR public.unaccent(lower(hs.ho_ten))
                 LIKE '%' || public.unaccent(lower(p_search)) || '%'
             )
-        ORDER BY hs.ho_ten
+        ORDER BY split_part(
+                         ho_ten,
+                         ' ',
+                         array_length(string_to_array(ho_ten, ' '), 1)
+                 ),
+                 ho_ten
         OFFSET p_offset LIMIT p_limit;
 END;
 $$;

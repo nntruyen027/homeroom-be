@@ -192,6 +192,12 @@ public class HocSinhRepo {
                     if (hoTen == null || hoTen.isEmpty()) {
                         throw new RuntimeException("Tên học sinh bị trống ở dòng " + (row.getRowNum() + 1));
                     }
+                    if (username == null || username.isEmpty()) {
+                        throw new RuntimeException("Tên học sinh bị trống ở dòng " + (row.getRowNum() + 1));
+                    }
+                    if (password == null || password.isEmpty()) {
+                        throw new RuntimeException("Tên học sinh bị trống ở dòng " + (row.getRowNum() + 1));
+                    }
 
 
                     return new Object[]{username, passwordEncoder.encode(password), hoTen, lopId, ngaySinh, laNam};

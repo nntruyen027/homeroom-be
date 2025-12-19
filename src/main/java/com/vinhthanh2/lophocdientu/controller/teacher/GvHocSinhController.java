@@ -58,6 +58,18 @@ public class GvHocSinhController {
         return hocSinhService.layHocSinhTheoLop(id, search, page, limit);
     }
 
+    @Operation(
+            summary = "Lấy học sinh theo id",
+            description = "Giáo viên/Admin lấy học sinh"
+    )
+    @SecurityApiResponses
+    @ApiResponse(responseCode = "200", description = "Lấy học sinh thành công")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+    @GetMapping("/{id}")
+    public HocSinhRes layHocSinhTheoId(@PathVariable Long id) {
+        return hocSinhService.layHsTheoId(id);
+    }
+
     /* =========================
        TẠO HỌC SINH
        ========================= */
