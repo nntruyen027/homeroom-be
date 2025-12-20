@@ -6,7 +6,6 @@ WITH latest_kq AS (
     ORDER BY hs_id, ngay_danh_gia DESC)
 SELECT hs.lop_id,
        COUNT(*)                                                                 AS so_luong_hoc_sinh,
-
        COUNT(*) FILTER (WHERE substring(kq.ma_holland from 1 for 2) LIKE '%R%') AS top2_r,
        COUNT(*) FILTER (WHERE substring(kq.ma_holland from 1 for 2) LIKE '%I%') AS top2_i,
        COUNT(*) FILTER (WHERE substring(kq.ma_holland from 1 for 2) LIKE '%A%') AS top2_a,
@@ -18,3 +17,6 @@ FROM latest_kq kq
          JOIN auth.hoc_sinh hs ON hs.user_id = kq.hs_id
 GROUP BY hs.lop_id
 ORDER BY hs.lop_id;
+
+select *
+from school.fn_thong_ke_holland_top_2_theo_lop(:id)

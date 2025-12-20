@@ -63,6 +63,7 @@ public class LogHuongNghiepRepo {
         return mapper.toDto(pros);
     }
 
+
     public Long demDsLog(Long userId) {
         String sql = """
                     SELECT school.fn_dem_log_hd_huong_nghiep(:userId, :hdId)

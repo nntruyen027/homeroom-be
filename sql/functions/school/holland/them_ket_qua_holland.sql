@@ -14,18 +14,20 @@ CREATE FUNCTION school.fn_them_ket_qua_holland(
 AS
 $$
 DECLARE
-    v_ma_holland text;
+    v_ma_holland varchar(3);
 BEGIN
     -- Tính ma_holland: 3 chữ cái của 3 điểm cao nhất
-    SELECT string_agg(k.c, '' ORDER BY k.diem DESC)
+    SELECT string_agg(c, '')
     INTO v_ma_holland
-    FROM (VALUES ('R', p_diem_r),
-                 ('I', p_diem_i),
-                 ('A', p_diem_a),
-                 ('S', p_diem_s),
-                 ('E', p_diem_e),
-                 ('C', p_diem_c)) AS k(c, diem)
-    LIMIT 3;
+    FROM (SELECT k.c
+          FROM (VALUES ('R', p_diem_r),
+                       ('I', p_diem_i),
+                       ('A', p_diem_a),
+                       ('S', p_diem_s),
+                       ('E', p_diem_e),
+                       ('C', p_diem_c)) AS k(c, diem)
+          ORDER BY diem DESC
+          LIMIT 3) t;
 
     -- Chèn vào bảng ket_qua_holland
     INSERT INTO school.ket_qua_holland(hs_id,
