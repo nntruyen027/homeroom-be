@@ -29,6 +29,10 @@ public class LogHuongNghiepService {
                 .totalElements(totalElements).build();
     }
 
+    public LogHdHuongNghiepRes layLog(Long userId, Long hdId) {
+        return logHuongNghiepRepo.layLog(userId, hdId);
+    }
+
     public LogHdHuongNghiepRes nhanXetLog(Long hdId, Long hsId, Long gvId, String nhanXet) {
         return logHuongNghiepRepo.nhanXetLog(hdId, hsId, gvId, nhanXet);
     }
@@ -37,12 +41,4 @@ public class LogHuongNghiepService {
         return logHuongNghiepRepo.taoLog(hdId, hsId, logHdHuongNghiepReq);
     }
 
-    public LogHdHuongNghiepRes suaLog(Long hdId, Long userId, LogHdHuongNghiepReq logHdHuongNghiepReq) {
-        return logHuongNghiepRepo.suaLog(hdId, userId, logHdHuongNghiepReq);
-    }
-
-    public void xoaLog(Long hdId, Long userId) {
-        logHuongNghiepRepo.xoaLog(hdId, userId);
-        ;
-    }
 }

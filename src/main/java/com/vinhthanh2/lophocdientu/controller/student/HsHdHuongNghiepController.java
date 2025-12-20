@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @SecurityRequirement(name = "BearerAuth")
 @Tag(
-        name = "Quản lý hoạt động hướng nghiệp của giáo viên",
+        name = "Quản lý hoạt động hướng nghiệp của học sinh",
         description = "API cho giáo viên tạo, cập nhật, xoá và xem danh sách hoạt động hướng nghiệp"
 )
 @PreAuthorize("hasRole('STUDENT')")

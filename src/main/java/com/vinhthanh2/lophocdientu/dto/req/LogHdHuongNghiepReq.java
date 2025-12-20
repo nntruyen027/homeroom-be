@@ -11,6 +11,5 @@ public class LogHdHuongNghiepReq {
     private String nnQuanTam;       // nội dung quan tâm
     private String kyNangHanChe;    // kỹ năng hạn chế
     private Integer mucDoHieuBiet;  // mức độ hiểu biết
-    private String caiThien;        // cải thiện
-    private Long idHoatDong;        // hd_id
+    private String caiThien;        // hd_id
 }

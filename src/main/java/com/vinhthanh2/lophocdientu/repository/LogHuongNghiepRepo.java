@@ -42,6 +42,27 @@ public class LogHuongNghiepRepo {
         return pros.stream().map(mapper::toDto).toList();
     }
 
+    public LogHdHuongNghiepRes layLog(Long userId, Long hdId) {
+
+        String sql = """
+                select * from school.fn_lay_log_hd_huong_nghiep(
+                              p_user_id := :user_id,
+                              p_hd_id := :hd_id, 
+                              p_offset := :offset, 
+                              p_limit := :limit
+                )
+                """;
+
+        LogHdHuongNghiepPro pros = (LogHdHuongNghiepPro) entityManager.createNativeQuery(sql, LogHdHuongNghiepPro.class)
+                .setParameter("user_id", userId)
+                .setParameter("hd_id", hdId)
+                .setParameter("limit", 1)
+                .setParameter("offset", 0)
+                .getSingleResult();
+
+        return mapper.toDto(pros);
+    }
+
     public Long demDsLog(Long userId) {
         String sql = """
                     SELECT school.fn_dem_log_hd_huong_nghiep(:userId, :hdId)
@@ -98,39 +119,5 @@ public class LogHuongNghiepRepo {
                 .setParameter("caiThien", logHdHuongNghiepReq.getCaiThien())
                 .getSingleResult();
         return mapper.toDto(pro);
-    }
-
-    public LogHdHuongNghiepRes suaLog(Long hdId, Long userId, LogHdHuongNghiepReq logHdHuongNghiepReq) {
-        String sql = """
-                select * from school.fn_sua_log_hd_huong_nghiep(
-                              p_user_id := :hsId, 
-                              p_hd_id := :hdId, 
-                              p_nn_quan_tam := :nnQuanTam, 
-                              p_muc_do_hieu_biet := :mucDoHieuBiet, 
-                              p_ky_nang_han_che := :kyNangHanChe, 
-                              p_cai_thien := :caiThien
-                )
-                """;
-
-        LogHdHuongNghiepPro pro = (LogHdHuongNghiepPro) entityManager.createNativeQuery(sql, LogHdHuongNghiepPro.class)
-                .setParameter("hdId", hdId)
-                .setParameter("hsId", userId)
-                .setParameter("nnQuanTam", logHdHuongNghiepReq.getNnQuanTam())
-                .setParameter("mucDoHieuBiet", logHdHuongNghiepReq.getMucDoHieuBiet())
-                .setParameter("kyNangHanChe", logHdHuongNghiepReq.getKyNangHanChe())
-                .setParameter("caiThien", logHdHuongNghiepReq.getCaiThien())
-                .getSingleResult();
-        return mapper.toDto(pro);
-    }
-
-    public void xoaLog(Long hdId, Long userId) {
-        entityManager.createNativeQuery("""
-                                    select from school.fn_xoa_log_hd_huong_nghiep(
-                                                p_user_id := :userId, p_hd_id := :hdId
-                                    )
-                        """).setParameter("userId", userId)
-                .setParameter("hdId", hdId)
-                .getSingleResult();
-
     }
 }

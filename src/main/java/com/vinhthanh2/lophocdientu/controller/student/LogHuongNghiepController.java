@@ -29,12 +29,22 @@ public class LogHuongNghiepController {
             description = "API trả về danh sách nhật ký theo học sinh có phân trang và tìm kiếm.")
     @SecurityApiResponses
     @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
-    @GetMapping("/{hdId}")
+    @GetMapping("")
     public PageResponse<LogHdHuongNghiepRes> layDsLogTheoHoatDong
             (
                     @RequestParam(defaultValue = "1", required = false) int page,
                     @RequestParam(defaultValue = "10", required = false) int limit) {
         return logHuongNghiepService.layDsLog(authService.getCurrentUser().getId(), page, limit);
+    }
+
+    @Operation(summary = "Lấy danh sách nhật ký theo học sinh theo hoạt động",
+            description = "API trả về danh sách nhật ký theo học sinh theo hoạt động có phân trang và tìm kiếm.")
+    @SecurityApiResponses
+    @ApiResponse(responseCode = "200", description = "Lấy danh sách thành công")
+    @GetMapping("/hoat-dong/{hdId}")
+    public LogHdHuongNghiepRes layDsLogTheoHoatDong
+            (@PathVariable Long hdId) {
+        return logHuongNghiepService.layLog(authService.getCurrentUser().getId(), hdId);
     }
 
     @Operation(summary = "Thêm nhật ký hướng nghiệp",
@@ -47,30 +57,5 @@ public class LogHuongNghiepController {
             @RequestBody LogHdHuongNghiepReq logHdHuongNghiepReq
     ) {
         return logHuongNghiepService.taoLog(hdId, authService.getCurrentUser().getId(), logHdHuongNghiepReq);
-    }
-
-
-    @Operation(summary = "Sửa nhật ký",
-            description = "API sửa nhật ký.")
-    @SecurityApiResponses
-    @ApiResponse(responseCode = "200", description = "Sửa nhật ký thành công")
-    @PutMapping("/{hdId}")
-    public LogHdHuongNghiepRes suaLog
-            (
-                    @PathVariable Long hdId,
-                    @RequestBody LogHdHuongNghiepReq logHdHuongNghiepReq
-            ) {
-        return logHuongNghiepService.suaLog(hdId, authService.getCurrentUser().getId(), logHdHuongNghiepReq);
-    }
-
-    @Operation(summary = "Xóa nhật ký",
-            description = "API xóa nhật ký.")
-    @SecurityApiResponses
-    @ApiResponse(responseCode = "200", description = "Xóa thành công")
-    @DeleteMapping("/{hdId}")
-    public void xoaLog(
-            @PathVariable Long hdId
-    ) {
-        logHuongNghiepService.xoaLog(hdId, authService.getCurrentUser().getId());
     }
 }
