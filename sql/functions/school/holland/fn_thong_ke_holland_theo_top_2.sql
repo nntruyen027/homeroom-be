@@ -13,6 +13,3 @@ begin
                  limit 1;
 end;
 $$ language plpgsql;
-
-select *
-from school.fn_thong_ke_holland_top_2_theo_lop(:id);

@@ -17,6 +17,3 @@ FROM latest_kq kq
          JOIN auth.hoc_sinh hs ON hs.user_id = kq.hs_id
 GROUP BY hs.lop_id
 ORDER BY hs.lop_id;
-
-select *
-from school.fn_thong_ke_holland_top_2_theo_lop(:id)

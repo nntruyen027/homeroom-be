@@ -4,7 +4,7 @@ create table school.ket_qua_holland
 (
     id            bigserial primary key,
 
-    hs_id         bigint     not null references auth.hoc_sinh (user_id),
+    hs_id         bigint     not null references auth.hoc_sinh (user_id) on delete cascade,
 
     diem_r        INT        NOT NULL, -- Realistic
     diem_i        INT        NOT NULL, -- Investigative
